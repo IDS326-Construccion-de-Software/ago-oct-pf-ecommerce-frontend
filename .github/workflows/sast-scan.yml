@@ -1,0 +1,36 @@
+name: SAST Scan
+on:
+  pull_request:
+    branches: [main,dev,qa]
+  push:
+    branches: [main,dev,qa]
+  workflow_dispatch:
+
+jobs:
+  horusec-security-scan:
+    name: horusec Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install horusec
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest
+      
+      - name: Run horusec scan
+        run: |
+          horusec start -p="./" -i="**/bin/**,**/obj/**,**/packages/**,**/TestResults/**" -e="true" -o="json" -O="./horusec-report.json" --disable-docker="true"
+
+      - name: Upload scan results
+        uses: actions/upload-artifact@v4
+        if: always() # Run even when the test fails due to detected vulnerabilities.
+        with:
+          name: horusec-security-report
+          path: ./horusec-report.json
+          retention-days: 7
