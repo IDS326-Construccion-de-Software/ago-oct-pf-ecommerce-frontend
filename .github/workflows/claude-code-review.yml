@@ -3,7 +3,7 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize]
-    branches: [main, dev, qa]
+    branches: [main]
 
 jobs:
   claude-review:
