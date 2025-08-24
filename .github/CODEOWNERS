@@ -1,0 +1,6 @@
+# CODEOWNERS file for ago-oct-pf-ecommerce-frontend
+# This file defines ownership rules for code review requirements
+# Order matters: the last matching rule takes precedence
+
+# Global ownership - all files require review from the construction software team
+* @Albert2707 @Uriel020 @jaime-hndz
