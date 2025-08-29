@@ -1,0 +1,42 @@
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; 
+  text-align: center;
+}
+
+.empty-cart h2 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #111111;
+  font-weight: bold;
+  width: 100%;       /* ocupar todo el contenedor */
+  max-width: 600px;  /* limitar ancho máximo */
+}
+
+.empty-cart p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #555555;
+  width: 80%;        /* ancho uniforme menor */
+  max-width: 400px;
+}
+
+.add-items-btn {
+  padding: 10px 50px;   /* ancho relativo al contenido */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background-color: #F8A91F; /* Amarillo */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+}
+
+.add-items-btn:hover {
+  background-color: #e6951c; /* un tono más oscuro al pasar el mouse */
+}
