@@ -1,0 +1,94 @@
+.banner{
+  position: relative;
+  width: 100%;
+  max-width: 1200px;       
+  margin: 0 auto;
+  overflow: hidden;
+  background: #f4f4f4;
+}
+.banner.rounded{ border-radius: 16px; }
+@media (max-width: 720px){
+  .banner.rounded{ border-radius: 12px; }
+}
+
+.track{
+  height: 100%;
+  display: flex;
+  transition: transform .5s ease;
+  will-change: transform;
+}
+
+.slide{
+  min-width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: #eee;
+}
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  border-radius: 0; 
+}
+
+/* Flechas */
+.nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: #fff;
+   font-size: 42px;
+  line-height: 1;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.nav:hover{ 
+  color: var(--color-primary);  
+  transform: translateY(-50%) scale(1.1);
+}
+
+.nav.prev{ left: 24px; }
+.nav.next{ right: 24px; }
+
+@media (max-width: 720px){ .nav{ display:none; } }
+/* Puntos */
+.dots{
+  position: absolute;
+  left: 50%; bottom: 10px;
+  transform: translateX(-50%);
+  display: flex; gap: 8px;
+}
+.dot{
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.25);
+  border: 0;
+  cursor: pointer;
+  transition: width .2s ease, background .2s ease;
+}
+.dot.active{
+  width: 20px;
+  background: #EC6426;      
+}
+
+html, body { overflow-x: clip; } 
+
+
+.container{
+  max-width: 1200px;   
+  margin: 0 auto;
+  padding: 0 24px;    
+}
+.banner--bleed{
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-radius: 0; 
+}
