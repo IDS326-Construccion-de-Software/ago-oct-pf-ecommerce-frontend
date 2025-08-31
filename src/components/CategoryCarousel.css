@@ -1,0 +1,101 @@
+/* File: src/components/CategoryCarousel.css */
+/* contenedor máximo centrado */
+.cat-wrap {
+  padding: 8px 0 24px;
+}
+
+/* título */
+.cat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.cat-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-accent, #632713);
+}
+
+/* viewport para flechas absolutas (NO fixed) */
+.cat-viewport {
+  position: relative;           /* para las flechas absolutas */
+}
+
+/* scroller horizontal */
+.cat-scroller {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(200px, 240px);
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: inline mandatory;
+  overscroll-behavior-inline: contain;
+  padding: 2px 40px;           
+}
+.cat-scroller::-webkit-scrollbar { height: 8px; }
+.cat-scroller::-webkit-scrollbar-thumb { background:#e6e6e6; border-radius: 6px; }
+
+/* tarjeta */
+.cat-card {
+  scroll-snap-align: start;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 14px 10px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.cat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+/* imagen redondeada */
+.cat-media {
+  width: 120px; height: 120px;
+  border-radius: 999px;
+  background: #f6f6f6;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.cat-media img {
+  width: 100%; height: 100%; object-fit: contain; display:block;
+}
+
+/* fallback con iniciales */
+.cat-fallback {
+  width: 100%; height: 100%;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 36px;
+  color: #fff;
+  background: var(--color-primary, #EC6426);
+}
+
+/* nombre */
+.cat-name {
+  font-weight: 700;
+  color: var(--color-accent, #632713);
+  line-height: 1.2;
+}
+
+/* flechas absolutas */
+.cat-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--color-primary, #EC6426);
+  cursor: pointer;
+  padding: 4px;
+}
+.cat-arrow svg { stroke-width: 3.5; }
+.cat-arrow:disabled { opacity: .25; cursor: not-allowed; }
+.cat-arrow--left  { left: 0;  }
+.cat-arrow--right { right: 0; }
