@@ -73,14 +73,14 @@ export default function ProductCarousel({
 
   
   const getMetrics = () => {
-    const el = scroller.current;
-    if (!el) return null;
-    const card = el.querySelector(".pc-card");
-    if (!card) return null;
-    const gap = parseInt(getComputedStyle(el).gap || "16", 10);
-    const cardW = card.offsetWidth + gap;
-    const realCount = products.length;
-    return { el, cardW, realCount, min: cardW * CLONES, max: cardW * (CLONES + realCount - 1) };
+  const scrollerElement = scroller.current;
+  if (!scrollerElement) return null;
+  const card = scrollerElement.querySelector(".pc-card");
+  if (!card) return null;
+  const gap = parseInt(getComputedStyle(scrollerElement).gap || "16", 10);
+  const cardW = card.offsetWidth + gap;
+  const realCount = products.length;
+  return { scrollerElement, cardW, realCount, min: cardW * CLONES, max: cardW * (CLONES + realCount - 1) };
   };
 
 
@@ -206,17 +206,17 @@ export default function ProductCarousel({
 
  
   useEffect(() => {
-    const m = getMetrics();
-    const el = m?.el;
-    if (!el) return;
+    const metrics = getMetrics();
+    const scrollerElement = metrics?.scrollerElement;
+    if (!scrollerElement) return;
     const onWheel = (e) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        el.scrollBy({ left: e.deltaY, behavior: "smooth" });
+        scrollerElement.scrollBy({ left: e.deltaY, behavior: "smooth" });
         e.preventDefault();
       }
     };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+    scrollerElement.addEventListener("wheel", onWheel, { passive: false });
+    return () => scrollerElement.removeEventListener("wheel", onWheel);
   }, [products.length]);
 
   return (
