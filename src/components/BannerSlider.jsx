@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import "./BannerSlider.css";
+import "../styles/BannerSlider.css";
 
 // importacion de banners
-import bannerCarnes from "../assets/Banner Carnes.svg";
-import bannerVaya   from "../assets/Vaya vaya.svg";
-import bannerPan    from "../assets/Banner Pan.svg";
-import bannerVinos  from "../assets/Banner Vinos Revenge.svg";
+import bannerCarnes from "../assets/BannerCarnes.svg";
+import bannerPromocional from "../assets/BannerPromocional.svg";
+import bannerPan from "../assets/BannerPan.svg";
+import bannerVinos from "../assets/BannerVinosRevenge.svg";
 
 const SLIDES = [
   { src: bannerCarnes, alt: "Ofertas en carnes seleccionadas" },
-  { src: bannerVaya,   alt: "Vaya Vaya: combos de la semana" },
+  { src: bannerPromocional, alt: "Promociones de la semana" },
   { src: bannerPan,    alt: "Panadería fresca todos los días" },
   { src: bannerVinos,  alt: "Vinos para cada ocasión" },
 ];

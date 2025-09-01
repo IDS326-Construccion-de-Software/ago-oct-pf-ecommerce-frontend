@@ -1,5 +1,5 @@
 // src/components/PromoGrid.jsx
-import "./PromoGrid.css";
+import "../styles/PromoGrid.css";
 
 export default function PromoGrid({ items = [] }) {
   return (

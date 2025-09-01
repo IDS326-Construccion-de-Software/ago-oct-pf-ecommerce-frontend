@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import "./CategoryCarousel.css";
+import "../styles/CategoryCarousel.css";
 
 
 export default function CategoryCarousel({ title = "Nuestras categorías", categories = [] }) {
