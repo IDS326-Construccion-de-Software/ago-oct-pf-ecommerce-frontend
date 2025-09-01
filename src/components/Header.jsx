@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import Logo from "../assets/Logo The Revenge V1.svg";
+import Logo from "../assets/LogoTheRevenge.svg";
 import { User, ShoppingCart, HelpCircle, Search } from "lucide-react";
-import "./Header.css";
+import "../styles/Header.css";
 
 export default function Header() {
   const CATEGORIES = [

@@ -1,6 +1,6 @@
 import { Mail, HelpCircle, ShieldCheck, FileText } from "lucide-react";
-import Logo from "../assets/Logo The Revenge V1.svg";
-import "./Footer.css";
+import Logo from "../assets/LogoTheRevenge.svg";
+import "../styles/Footer.css";
 
 export default function Footer() {
   return (

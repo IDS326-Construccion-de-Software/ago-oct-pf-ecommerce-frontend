@@ -1,7 +1,7 @@
 // src/components/ProductCarousel.jsx
 import { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import "./ProductCarousel.css";
+import "../styles/ProductCarousel.css";
 
 function formatMoney(value) {
   return new Intl.NumberFormat("es-DO", {
