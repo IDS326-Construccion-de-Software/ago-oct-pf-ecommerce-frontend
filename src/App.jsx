@@ -7,13 +7,17 @@ import Footer from "./components/Footer";
 import { productsMock } from "./mocks/products";
 import CategoryCarousel from "./components/CategoryCarousel";  
 import { categoriesMock } from "./mocks/categories";
+import { CartProvider, CartContext } from "./context/CartContext";
+import ShoppingCart from "./components/ShoppingCart";
+import { useContext } from "react";
 
 export default function App() {
   const handleAdd = (p) => {
     console.log("ADD TO CART:", p);
   };
 
- 
+  const { addToCart } = useContext(CartContext) || {};
+
   const promos = [
     {
       imgUrl:
@@ -49,7 +53,7 @@ export default function App() {
   ];
 
   return (
-    <>
+    <CartProvider>
       <Header />
 
       {/* Contenido principal */}
@@ -64,7 +68,7 @@ export default function App() {
           <ProductCarousel
             title="Disfruta de nuestra selección"
             products={productsMock}
-            onAdd={handleAdd}
+            onAdd={addToCart} 
           />
         </div>
 
@@ -82,7 +86,10 @@ export default function App() {
 
       {/* Footer al final */}
       <Footer />
-    </>
+
+      {/*Carrito disponible siempre */}
+      <ShoppingCart /> 
+    </CartProvider>
   );
 }
 // import "./App.css";
