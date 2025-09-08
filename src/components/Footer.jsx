@@ -57,7 +57,6 @@ export default function Footer() {
             onSubmit={(e) => {
               e.preventDefault();
              
-              alert("¡Gracias por suscribirte! 🧡");
             }}
           >
             <label className="sr-only" htmlFor="nl-email">Correo electrónico</label>
