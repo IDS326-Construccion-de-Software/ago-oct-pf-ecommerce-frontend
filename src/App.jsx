@@ -11,12 +11,8 @@ import { CartProvider, CartContext } from "./context/CartContext";
 import ShoppingCart from "./components/ShoppingCart";
 import { useContext } from "react";
 
-export default function App() {
-  const handleAdd = (p) => {
-    console.log("ADD TO CART:", p);
-  };
-
-  const { addToCart } = useContext(CartContext) || {};
+function StoreContent() {
+  const { addToCart } = useContext(CartContext); 
 
   const promos = [
     {
@@ -53,29 +49,24 @@ export default function App() {
   ];
 
   return (
-    <CartProvider>
+    <>
       <Header />
 
-      {/* Contenido principal */}
       <main>
-        {/* Banner centrado como el header */}
         <div className="container" style={{ paddingBlock: "16px" }}>
           <BannerSlider autoPlay delay={5000} fit="cover" rounded />
         </div>
 
-        {/* Carrusel de productos centrado */}
         <div className="container" style={{ paddingBottom: "32px" }}>
           <ProductCarousel
             title="Disfruta de nuestra selección"
             products={productsMock}
-            onAdd={addToCart} 
+            onAdd={addToCart}   
           />
         </div>
 
-        {/* Sección de promos */}
         <PromoGrid items={promos} />
 
-        {/* Carrusel de categorías */}
         <div className="container" style={{ padding: "32px 0" }}>
           <CategoryCarousel
             title="Nuestras categorías"
@@ -84,12 +75,16 @@ export default function App() {
         </div>
       </main>
 
-      {/* Footer al final */}
       <Footer />
-
-      {/*Carrito disponible siempre */}
       <ShoppingCart /> 
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <StoreContent />
     </CartProvider>
   );
 }
-// import "./App.css";
