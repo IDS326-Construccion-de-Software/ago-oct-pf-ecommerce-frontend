@@ -53,7 +53,8 @@ export function CartProvider({ children }) {
     setCartItems((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const value = {
+  return (
+    <CartContext.Provider value={{
     cartItems,
     addToCart,
     removeFromCart,
@@ -62,11 +63,8 @@ export function CartProvider({ children }) {
     setIsCartOpen,
     increaseQuantity,
     decreaseQuantity,
-  };
-
-
-  return (
-    <CartContext.Provider value={value}>
+  }}
+>
       {children}
     </CartContext.Provider>
   );
