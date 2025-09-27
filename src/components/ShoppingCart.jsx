@@ -84,11 +84,11 @@ export default function ShoppingCart() {
 
             <div className="item-actions">
               <div className="quantity-controls">
-                <button onClick={() => increaseQuantityQuantity(item.id)}>
+                <button onClick={() => increaseQuantity(item.id)}>
                   <Plus size={16} />
                 </button>
                 <span>{item.quantity}</span>
-                <button onClick={() => decreaseQuantityQuantity(item.id)}>
+                <button onClick={() => decreaseQuantity(item.id)}>
                   <Minus size={16} />
                 </button>
               </div>
