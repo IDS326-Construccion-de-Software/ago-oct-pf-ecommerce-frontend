@@ -10,6 +10,9 @@ import { categoriesMock } from "./mocks/categories";
 import { CartProvider, CartContext } from "./context/CartContext";
 import ShoppingCart from "./components/ShoppingCart";
 import { useContext } from "react";
+import { Routes, Route } from "react-router-dom";
+import RegistroPaso1 from "./pages/RegistroPaso1";
+import RegistroPaso2 from "./pages/RegistroPaso2";
 
 export default function App() {
   const handleAdd = (p) => {
@@ -56,32 +59,40 @@ export default function App() {
     <CartProvider>
       <Header />
 
-      {/* Contenido principal */}
+      {/* Contenido principal con rutas */}
       <main>
-        {/* Banner centrado como el header */}
-        <div className="container" style={{ paddingBlock: "16px" }}>
-          <BannerSlider autoPlay delay={5000} fit="cover" rounded />
-        </div>
+        <Routes>
+          <Route path="/" element={
+            <>
+              {/* Banner centrado como el header */}
+              <div className="container" style={{ paddingBlock: "16px" }}>
+                <BannerSlider autoPlay delay={5000} fit="cover" rounded />
+              </div>
 
-        {/* Carrusel de productos centrado */}
-        <div className="container" style={{ paddingBottom: "32px" }}>
-          <ProductCarousel
-            title="Disfruta de nuestra selección"
-            products={productsMock}
-            onAdd={addToCart} 
-          />
-        </div>
+              {/* Carrusel de productos centrado */}
+              <div className="container" style={{ paddingBottom: "32px" }}>
+                <ProductCarousel
+                  title="Disfruta de nuestra selección"
+                  products={productsMock}
+                  onAdd={addToCart} 
+                />
+              </div>
 
-        {/* Sección de promos */}
-        <PromoGrid items={promos} />
+              {/* Sección de promos */}
+              <PromoGrid items={promos} />
 
-        {/* Carrusel de categorías */}
-        <div className="container" style={{ padding: "32px 0" }}>
-          <CategoryCarousel
-            title="Nuestras categorías"
-            categories={categoriesMock}
-          />
-        </div>
+              {/* Carrusel de categorías */}
+              <div className="container" style={{ padding: "32px 0" }}>
+                <CategoryCarousel
+                  title="Nuestras categorías"
+                  categories={categoriesMock}
+                />
+              </div>
+            </>
+          } />
+          <Route path="/registro" element={<RegistroPaso1 />} />
+          <Route path="/registro/paso2" element={<RegistroPaso2 />} />
+        </Routes>
       </main>
 
       {/* Footer al final */}
