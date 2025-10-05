@@ -11,6 +11,7 @@ import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
 import { productsMock } from "./mocks/products";
 import { categoriesMock } from "./mocks/categories";
+import Login from './pages/Login';
 
 // --- Componentes Separados para una Arquitectura Limpia ---
 
@@ -91,6 +92,7 @@ export default function App() {
     <CartProvider>
       <Routes>
         <Route path="/" element={<AppContainer />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </CartProvider>
   );
