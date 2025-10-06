@@ -1,7 +1,8 @@
 /* Registro.css - Estilos para las páginas de registro */
 
 .card {
-  max-width: 420px;
+  width: 480px;
+  max-width: 90vw;
   margin: 2rem auto;
   padding: 2rem;
   background: rgba(255, 255, 255, 0.95);
@@ -183,6 +184,7 @@
   display: flex;
   gap: 0.75rem;
   margin-top: 1.5rem;
+  justify-content: center;
 }
 
 .ghost {
@@ -232,6 +234,30 @@
   color: #d2691e;
 }
 
+/* Link de inicio de sesión */
+.login-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: #6b4a3a;
+  width: 100%;
+}
+
+.login-link a {
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Centrar el social-row cuando contiene login-link */
+.social-row {
+  justify-content: center;
+}
+
 /* Responsive design */
 @media (max-width: 480px) {
   .card {
@@ -269,4 +295,16 @@
   justify-content: center;
   padding: 2rem 1rem;
   background: linear-gradient(135deg, #f8f6f4 0%, #e5d4c8 100%);
+}
+
+/* Logo section */
+.logo-section {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.registro-logo {
+  width: 160px;
+  height: auto;
+  max-width: 100%;
 }

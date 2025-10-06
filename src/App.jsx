@@ -8,6 +8,7 @@ import { productsMock } from "./mocks/products";
 import CategoryCarousel from "./components/CategoryCarousel";  
 import { categoriesMock } from "./mocks/categories";
 import { CartProvider, CartContext } from "./context/CartContext";
+import { RegistroProvider } from "./context/RegistroContext";
 import ShoppingCart from "./components/ShoppingCart";
 import { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
@@ -57,13 +58,13 @@ export default function App() {
 
   return (
     <CartProvider>
-      <Header />
-
+      <RegistroProvider>
       {/* Contenido principal con rutas */}
       <main>
         <Routes>
           <Route path="/" element={
             <>
+              <Header />
               {/* Banner centrado como el header */}
               <div className="container" style={{ paddingBlock: "16px" }}>
                 <BannerSlider autoPlay delay={5000} fit="cover" rounded />
@@ -88,6 +89,9 @@ export default function App() {
                   categories={categoriesMock}
                 />
               </div>
+              
+              {/* Footer solo en la página principal */}
+              <Footer />
             </>
           } />
           <Route path="/registro" element={<RegistroPaso1 />} />
@@ -95,11 +99,9 @@ export default function App() {
         </Routes>
       </main>
 
-      {/* Footer al final */}
-      <Footer />
-
       {/*Carrito disponible siempre */}
       <ShoppingCart /> 
+      </RegistroProvider>
     </CartProvider>
   );
 }
