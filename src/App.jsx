@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { CartProvider, CartContext } from "./context/CartContext";
 import Header from "./components/Header";
@@ -9,13 +9,12 @@ import PromoGrid from "./components/PromoGrid";
 import CategoryCarousel from "./components/CategoryCarousel";
 import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
+import OrdersManager from './components/OrdersManager';
+import { ProductDetail } from './components/ProductDetail';
 import { productsMock } from "./mocks/products";
 import { categoriesMock } from "./mocks/categories";
 
-// --- Componentes Separados para una Arquitectura Limpia ---
-
-// 1. Componente de Presentación (Layout)
-// No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
+// --- Componente de Presentación (Home Layout) ---
 const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen }) => (
   <div className="min-h-screen flex flex-col">
     <Header />
@@ -49,13 +48,11 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
   </div>
 );
 
-// 2. Componente Contenedor (Lógica)
-// Se encarga de la lógica, el estado y el acceso al contexto.
+// --- Componente Contenedor Home ---
 const AppContainer = () => {
   const { addToCart, cartItems } = useContext(CartContext);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  // Cálculo seguro del total del carrito
   const cartTotal = (cartItems || []).reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
 
   const handleCheckout = () => {
@@ -65,12 +62,36 @@ const AppContainer = () => {
   };
 
   const promos = [
-    { imgUrl: "https://blog.supermercadosmas.com/wp-content/uploads/2018/03/700x700-20.png", imgAlt: "Cortes de carne", badge: "HASTA 15% DE DESCUENTO", title: "En surtido de Carnes seleccionadas", subtitle: "Solo esta semana", ctaLabel: "Comprar ahora", ctaHref: "/categorias/carnes" },
-    { imgUrl: "https://images.pexels.com/photos/3296273/pexels-photo-3296273.jpeg?auto=compress&cs=tinysrgb&w=1600", imgAlt: "Pescados y mariscos", badge: "DISFRUTA", title: "Nuestro surtido de Pescados y Mariscos", subtitle: "Fresco todos los días", ctaLabel: "Comprar ahora", ctaHref: "/categorias/pescados" },
-    { imgUrl: "https://images.pexels.com/photos/750952/pexels-photo-750952.jpeg?auto=compress&cs=tinysrgb&w=1600", imgAlt: "Vegetales frescos", badge: "VARIEDAD Y FRESCURA", title: "En frutas y vegetales", subtitle: "Aprovecha las ofertas", ctaLabel: "Comprar ahora", ctaHref: "/categorias/vegetales", span: "wide" },
+    { 
+      imgUrl: "https://blog.supermercadosmas.com/wp-content/uploads/2018/03/700x700-20.png", 
+      imgAlt: "Cortes de carne", 
+      badge: "HASTA 15% DE DESCUENTO", 
+      title: "En surtido de Carnes seleccionadas", 
+      subtitle: "Solo esta semana", 
+      ctaLabel: "Comprar ahora", 
+      ctaHref: "/categorias/carnes" 
+    },
+    { 
+      imgUrl: "https://images.pexels.com/photos/3296273/pexels-photo-3296273.jpeg?auto=compress&cs=tinysrgb&w=1600", 
+      imgAlt: "Pescados y mariscos", 
+      badge: "DISFRUTA", 
+      title: "Nuestro surtido de Pescados y Mariscos", 
+      subtitle: "Fresco todos los días", 
+      ctaLabel: "Comprar ahora", 
+      ctaHref: "/categorias/pescados" 
+    },
+    { 
+      imgUrl: "https://images.pexels.com/photos/750952/pexels-photo-750952.jpeg?auto=compress&cs=tinysrgb&w=1600", 
+      imgAlt: "Vegetales frescos", 
+      badge: "VARIEDAD Y FRESCURA", 
+      title: "En frutas y vegetales", 
+      subtitle: "Aprovecha las ofertas", 
+      ctaLabel: "Comprar ahora", 
+      ctaHref: "/categorias/vegetales", 
+      span: "wide" 
+    },
   ];
 
-  // Pasa toda la lógica y datos al componente de presentación
   return (
     <AppLayout 
       promos={promos}
@@ -84,13 +105,42 @@ const AppContainer = () => {
   );
 }
 
-// 3. Componente Principal (Raíz)
-// Configura los proveedores globales (Contexto, Router)
+// --- Página de Orders ---
+const OrdersPage = () => (
+  <div className="min-h-screen flex flex-col">
+    <Header />
+    <main className="flex-1">
+      <div className="container mx-auto px-4 py-8">
+        <OrdersManager />
+      </div>
+    </main>
+    <Footer />
+  </div>
+);
+
+// --- Página de Detalle de Producto ---
+const ProductDetailPage = () => {
+  const { id } = useParams();
+  
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <ProductDetail productId={id} />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// --- Componente Principal (Raíz) ---
 export default function App() {
   return (
     <CartProvider>
       <Routes>
         <Route path="/" element={<AppContainer />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/producto/:id" element={<ProductDetailPage />} />
       </Routes>
     </CartProvider>
   );
