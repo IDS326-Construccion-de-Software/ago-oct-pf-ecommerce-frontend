@@ -1,5 +1,5 @@
 import { Routes, Route, useParams } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { CartProvider, CartContext } from "./context/CartContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -11,11 +11,11 @@ import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
 import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
-import { productsMock } from "./mocks/products";
+import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 
 // --- Componente de Presentación (Home Layout) ---
-const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen }) => (
+const AppLayout = ({ promos, products, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen, loading }) => (
   <div className="min-h-screen flex flex-col">
     <Header />
     <main>
@@ -23,11 +23,15 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
         <BannerSlider autoPlay delay={5000} fit="cover" rounded />
       </div>
       <div className="container" style={{ paddingBottom: "32px" }}>
-        <ProductCarousel
-          title="Disfruta de nuestra selección"
-          products={productsMock}
-          onAdd={onAdd}
-        />
+        {loading ? (
+          <div className="text-center py-8">Cargando productos...</div>
+        ) : (
+          <ProductCarousel
+            title="Disfruta de nuestra selección"
+            products={products}
+            onAdd={onAdd}
+          />
+        )}
       </div>
       <PromoGrid items={promos} />
       <div className="container" style={{ padding: "32px 0" }}>
@@ -52,6 +56,27 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
 const AppContainer = () => {
   const { addToCart, cartItems } = useContext(CartContext);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Cargar productos al montar el componente
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        // Obtener todos los productos (primera página con tamaño grande para mostrar todo)
+        const response = await getAllProducts(1, 20);
+        setProducts(response.items);
+      } catch (error) {
+        console.error('Error cargando productos:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   const cartTotal = (cartItems || []).reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
 
@@ -95,12 +120,14 @@ const AppContainer = () => {
   return (
     <AppLayout 
       promos={promos}
+      products={products}
       onAdd={addToCart}
       onCheckout={handleCheckout}
       cartItems={cartItems}
       cartTotal={cartTotal}
       isPaymentModalOpen={isPaymentModalOpen}
       setIsPaymentModalOpen={setIsPaymentModalOpen}
+      loading={loading}
     />
   );
 }
