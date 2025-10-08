@@ -1,6 +1,7 @@
 import { Routes, Route, useParams } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import { CartProvider, CartContext } from "./context/CartContext";
+import { OrdersProvider } from "./context/OrdersContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BannerSlider from "./components/BannerSlider";
@@ -15,7 +16,7 @@ import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 
 // --- Componente de Presentación (Home Layout) ---
-const AppLayout = ({ promos, products, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen, loading }) => (
+const AppLayout = ({ promos, products, onAdd, loading }) => (
   <div className="min-h-screen flex flex-col">
     <Header />
     <main>
@@ -42,29 +43,19 @@ const AppLayout = ({ promos, products, onAdd, onCheckout, cartItems, cartTotal, 
       </div>
     </main>
     <Footer />
-    <ShoppingCart onCheckout={onCheckout} />
-    <PaymentModal 
-      isOpen={isPaymentModalOpen} 
-      onClose={() => setIsPaymentModalOpen(false)} 
-      cartItems={cartItems || []} 
-      total={cartTotal} 
-    />
   </div>
 );
 
 // --- Componente Contenedor Home ---
 const AppContainer = () => {
-  const { addToCart, cartItems } = useContext(CartContext);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const { addToCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Cargar productos al montar el componente
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
-        // Obtener todos los productos (primera página con tamaño grande para mostrar todo)
         const response = await getAllProducts(1, 20);
         setProducts(response.items);
       } catch (error) {
@@ -74,47 +65,22 @@ const AppContainer = () => {
         setLoading(false);
       }
     };
-
     loadProducts();
   }, []);
 
-  const cartTotal = (cartItems || []).reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-
-  const handleCheckout = () => {
-    if (cartItems && cartItems.length > 0) {
-      setIsPaymentModalOpen(true);
-    }
-  };
-
   const promos = [
-    { 
-      imgUrl: "https://blog.supermercadosmas.com/wp-content/uploads/2018/03/700x700-20.png", 
-      imgAlt: "Cortes de carne", 
-      badge: "HASTA 15% DE DESCUENTO", 
-      title: "En surtido de Carnes seleccionadas", 
-      subtitle: "Solo esta semana", 
-      ctaLabel: "Comprar ahora", 
-      ctaHref: "/categorias/carnes" 
+    {
+      title: "Ofertas de Temporada",
+      description: "Descuentos increíbles",
+      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop",
+      link: "/promociones/temporada"
     },
-    { 
-      imgUrl: "https://images.pexels.com/photos/3296273/pexels-photo-3296273.jpeg?auto=compress&cs=tinysrgb&w=1600", 
-      imgAlt: "Pescados y mariscos", 
-      badge: "DISFRUTA", 
-      title: "Nuestro surtido de Pescados y Mariscos", 
-      subtitle: "Fresco todos los días", 
-      ctaLabel: "Comprar ahora", 
-      ctaHref: "/categorias/pescados" 
-    },
-    { 
-      imgUrl: "https://images.pexels.com/photos/750952/pexels-photo-750952.jpeg?auto=compress&cs=tinysrgb&w=1600", 
-      imgAlt: "Vegetales frescos", 
-      badge: "VARIEDAD Y FRESCURA", 
-      title: "En frutas y vegetales", 
-      subtitle: "Aprovecha las ofertas", 
-      ctaLabel: "Comprar ahora", 
-      ctaHref: "/categorias/vegetales", 
-      span: "wide" 
-    },
+    {
+      title: "Productos Frescos",
+      description: "Calidad garantizada",
+      image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&auto=format&fit=crop",
+      link: "/categoria/frescos"
+    }
   ];
 
   return (
@@ -122,15 +88,10 @@ const AppContainer = () => {
       promos={promos}
       products={products}
       onAdd={addToCart}
-      onCheckout={handleCheckout}
-      cartItems={cartItems}
-      cartTotal={cartTotal}
-      isPaymentModalOpen={isPaymentModalOpen}
-      setIsPaymentModalOpen={setIsPaymentModalOpen}
       loading={loading}
     />
   );
-}
+};
 
 // --- Página de Orders ---
 const OrdersPage = () => (
@@ -148,15 +109,47 @@ const OrdersPage = () => (
 // --- Página de Detalle de Producto ---
 const ProductDetailPage = () => {
   const { id } = useParams();
+  const { addToCart } = useContext(CartContext); 
   
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <ProductDetail productId={id} />
+        <ProductDetail productId={id} onAddToCart={addToCart} />
       </main>
       <Footer />
     </div>
+  );
+};
+
+// --- Componente Wrapper con Carrito Global ---
+const GlobalCartWrapper = ({ children }) => {
+  const { cartItems, setIsCartOpen } = useContext(CartContext);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  const cartTotal = (cartItems || []).reduce(
+    (total, item) => total + (item.price * (item.quantity || 1)), 
+    0
+  );
+
+  const handleCheckout = () => {
+    if (cartItems && cartItems.length > 0) {
+      setIsCartOpen(false);
+      setIsPaymentModalOpen(true);
+    }
+  };
+
+  return (
+    <>
+      {children}
+      <ShoppingCart onCheckout={handleCheckout} />
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+        cartItems={cartItems || []} 
+        total={cartTotal} 
+      />
+    </>
   );
 };
 
@@ -164,11 +157,15 @@ const ProductDetailPage = () => {
 export default function App() {
   return (
     <CartProvider>
-      <Routes>
-        <Route path="/" element={<AppContainer />} />
-        <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/producto/:id" element={<ProductDetailPage />} />
-      </Routes>
+      <OrdersProvider>
+        <GlobalCartWrapper>
+          <Routes>
+            <Route path="/" element={<AppContainer />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/producto/:id" element={<ProductDetailPage />} />
+          </Routes>
+        </GlobalCartWrapper>
+      </OrdersProvider>
     </CartProvider>
   );
 }

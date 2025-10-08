@@ -128,11 +128,11 @@ const mockOrders = [
   },
   {
     id: "order-002",
-    userId: mockUsers[1].id,
+    userId: mockUsers[0].id,
     total: 1260.0,
     status: "pending",
     placedAt: "2024-05-22T10:15:00Z",
-    user: mockUsers[1],
+    user: mockUsers[0],
     orderItems: [
       {
         id: "item3",
@@ -155,11 +155,11 @@ const mockOrders = [
   },
   {
     id: "order-003",
-    userId: mockUsers[2].id,
+    userId: mockUsers[0].id,
     total: 1280.0,
     status: "cancelled",
     placedAt: "2024-05-21T16:45:00Z",
-    user: mockUsers[2],
+    user: mockUsers[0],
     orderItems: [
       {
         id: "item4",
@@ -182,11 +182,11 @@ const mockOrders = [
   },
   {
     id: "order-004",
-    userId: mockUsers[1].id,
+    userId: mockUsers[0].id,
     total: 3500.0,
     status: "completed",
     placedAt: "2024-04-15T11:00:00Z",
-    user: mockUsers[1],
+    user: mockUsers[0],
     orderItems: [
       {
         id: "item5",
@@ -206,6 +206,33 @@ const mockOrders = [
     ],
     invoices: [],
     payments: [{ paymentMethod: mockPaymentMethods[0] }],
+  },
+  {
+    id: "order-005",
+    userId: mockUsers[0].id,
+    total: 450.0,
+    status: "pending",
+    placedAt: "2024-06-01T09:30:00Z",
+    user: mockUsers[0],
+    orderItems: [
+      {
+        id: "item6",
+        quantity: 3,
+        unitPrice: 150.0,
+        subtotal: 450.0,
+        product: {
+          id: "550e8400-e29b-41d4-a716-446655440002",
+          name: "Hummus Tradicional Boar's Head",
+          productImages: [
+            {
+              url: "https://www.instacart.com/image-server/1200x1200/www.instacart.com/assets/domains/product-image/file/large_fc4228a1-92f6-4c9f-9c03-32209fab690c.jpg",
+            },
+          ],
+        },
+      },
+    ],
+    invoices: [],
+    payments: [{ paymentMethod: mockPaymentMethods[1] }],
   },
 ]
 
@@ -261,27 +288,73 @@ const transformOrderData = (order) => ({
     })) || [],
 })
 
-// ============= FUNCIONES MOCK =============
+// ============= FUNCIONES MOCK CON FILTROS COMPLETOS =============
 
 const mockFilterMyOrders = async (filters, page = 1, pageSize = 10) => {
   await simulateDelay(500)
   const currentUser = getCurrentUser()
-  if (!currentUser) return { items: [], totalPages: 0, totalCount: 0 }
+  if (!currentUser) return { items: [], totalPages: 0, totalCount: 0, currentPage: page }
 
-  let myOrders = mockOrders.filter((order) => order.userId === currentUser.id)
+  let myOrders = [...mockOrders].filter((order) => order.userId === currentUser.id)
 
+  // Filtro por búsqueda de ID
+  if (filters.search && filters.search.trim()) {
+    const searchTerm = filters.search.toLowerCase().trim()
+    myOrders = myOrders.filter((o) => o.id.toLowerCase().includes(searchTerm))
+  }
+
+  // Filtro por búsqueda de producto
+  if (filters.productSearch && filters.productSearch.trim()) {
+    const productSearchTerm = filters.productSearch.toLowerCase().trim()
+    myOrders = myOrders.filter((order) =>
+      order.orderItems.some((item) =>
+        item.product?.name?.toLowerCase().includes(productSearchTerm)
+      )
+    )
+  }
+
+  // Filtro por estado
   if (filters.status && filters.status !== "all") {
     const dbStatusMap = {
       entregado: "completed",
       pendiente: "pending",
       cancelado: "cancelled",
+      procesando: "processing",
     }
-    myOrders = myOrders.filter((o) => o.status === dbStatusMap[filters.status])
+    const dbStatus = dbStatusMap[filters.status]
+    if (dbStatus) {
+      myOrders = myOrders.filter((o) => o.status === dbStatus)
+    }
   }
 
-  if (filters.search && filters.search.trim()) {
-    myOrders = myOrders.filter((o) => o.id.toLowerCase().includes(filters.search.toLowerCase().trim()))
+  // Filtro por fecha desde
+  if (filters.dateFrom) {
+    const fromDate = new Date(filters.dateFrom)
+    fromDate.setHours(0, 0, 0, 0)
+    myOrders = myOrders.filter((o) => new Date(o.placedAt) >= fromDate)
   }
+
+  // Filtro por fecha hasta
+  if (filters.dateTo) {
+    const toDate = new Date(filters.dateTo)
+    toDate.setHours(23, 59, 59, 999)
+    myOrders = myOrders.filter((o) => new Date(o.placedAt) <= toDate)
+  }
+
+  // Filtro por monto mínimo
+  if (filters.minAmount && !isNaN(parseFloat(filters.minAmount))) {
+    const minAmount = parseFloat(filters.minAmount)
+    myOrders = myOrders.filter((o) => o.total >= minAmount)
+  }
+
+  // Filtro por monto máximo
+  if (filters.maxAmount && !isNaN(parseFloat(filters.maxAmount))) {
+    const maxAmount = parseFloat(filters.maxAmount)
+    myOrders = myOrders.filter((o) => o.total <= maxAmount)
+  }
+
+  // Ordenar por fecha (más reciente primero)
+  myOrders.sort((a, b) => new Date(b.placedAt) - new Date(a.placedAt))
 
   const totalCount = myOrders.length
   const totalPages = Math.ceil(totalCount / pageSize)
@@ -292,6 +365,7 @@ const mockFilterMyOrders = async (filters, page = 1, pageSize = 10) => {
     items: paginatedItems.map(transformOrderData),
     totalPages,
     totalCount,
+    currentPage: page,
   }
 }
 
@@ -341,7 +415,7 @@ export const filterMyOrders = async (filters, page = 1, pageSize = 10) => {
       : await apiFilterMyOrders(filters, page, pageSize)
   } catch (error) {
     console.error("Error en filterMyOrders:", error)
-    return { items: [], totalPages: 0, totalCount: 0 }
+    return { items: [], totalPages: 0, totalCount: 0, currentPage: page }
   }
 }
 

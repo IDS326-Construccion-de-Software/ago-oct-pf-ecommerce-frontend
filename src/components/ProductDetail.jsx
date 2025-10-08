@@ -1,18 +1,23 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, Share2, ShoppingCart, Zap, Plus, Minus, Shield, Award } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import PropTypes from "prop-types"
+import Swal from "sweetalert2"
+import "sweetalert2/dist/sweetalert2.min.css" // Importa los estilos
+
+import { ArrowLeft, Share2, ShoppingCart, Zap, Plus, Minus, Shield, Award } from "lucide-react"
 import { getProductById, getRelatedProducts } from "../services/productService"
 import { formatCurrency } from "../services/orderService"
 import "../styles/ProductDetail.css"
-import PropTypes from "prop-types"
 
+// Definimos los prop-types, añadiendo onAddToCart
 ProductDetail.propTypes = {
   productId: PropTypes.string.isRequired,
+  onAddToCart: PropTypes.func, // Función para añadir al carrito
 }
 
-export function ProductDetail({ productId }) {
+export function ProductDetail({ productId, onAddToCart }) {
   const navigate = useNavigate()
 
   const [product, setProduct] = useState(null)
@@ -24,27 +29,22 @@ export function ProductDetail({ productId }) {
 
   useEffect(() => {
     const loadProductData = async () => {
-      console.log("[v0] ProductDetail - productId:", productId)
-
       setLoading(true)
       setError(null)
       setProduct(null)
 
       try {
-        console.log("[v0] ProductDetail - Llamando getProductById...")
         const productData = await getProductById(productId)
-        console.log("[v0] ProductDetail - Producto cargado:", productData)
         setProduct(productData)
 
-        console.log("[v0] ProductDetail - Cargando productos relacionados...")
         const related = await getRelatedProducts(productId)
-        console.log("[v0] ProductDetail - Productos relacionados:", related)
         setRelatedProducts(related)
 
+        // Reiniciar estado para el nuevo producto
         setQuantity(1)
         setSelectedImage(0)
       } catch (err) {
-        console.error("[v0] Error loading product:", err)
+        console.error("Error cargando el producto:", err)
         setError("No pudimos encontrar el producto que buscas.")
       } finally {
         setLoading(false)
@@ -55,30 +55,55 @@ export function ProductDetail({ productId }) {
       loadProductData()
       window.scrollTo(0, 0)
     } else {
-      console.error("[v0] ProductDetail - No productId found in params")
+      console.error("ProductDetail - No se encontró un productId en los parámetros.")
       setError("ID de producto no válido")
       setLoading(false)
     }
-
-    console.log("[Debug] Available mock product IDs:", [
-      "550e8400-e29b-41d4-a716-446655440001",
-      "550e8400-e29b-41d4-a716-446655440002",
-      "550e8400-e29b-41d4-a716-446655440003",
-      "550e8400-e29b-41d4-a716-446655440004",
-      "550e8400-e29b-41d4-a716-446655440005",
-      "550e8400-e29b-41d4-a716-446655440006",
-    ])
   }, [productId])
 
+  // Función para añadir al carrito, ahora usa la prop onAddToCart
   const handleAddToCart = () => {
-    if (product) {
-      alert(`${product.name} (x${quantity}) agregado al carrito.`)
+    if (product && onAddToCart) {
+      // Llama a la función pasada por props con el producto y la cantidad
+      onAddToCart(product, quantity)
+
+      // Muestra una notificación de éxito con SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "¡Agregado!",
+        text: `${product.name} (x${quantity}) se ha agregado al carrito.`,
+        timer: 1500,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top-end',
+      })
+    } else if (!onAddToCart) {
+        console.warn("ProductDetail: La función 'onAddToCart' no fue proporcionada como prop.")
+         // Notificación de error si la función no existe
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'La funcionalidad del carrito no está disponible en este momento.',
+        })
     }
   }
 
+  // Función de comprar ahora con SweetAlert (ejemplo)
   const handleBuyNow = () => {
     if (product) {
-      alert(`Comprando ${product.name} (x${quantity})`)
+      Swal.fire({
+        title: 'Proceder al pago',
+        text: `Estás a punto de comprar ${quantity} x ${product.name}.`,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, comprar ahora',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+            // Aquí iría la lógica para redirigir al checkout
+            Swal.fire('¡Gracias!', 'Redirigiendo a la página de pago...', 'success')
+        }
+      })
     }
   }
 
@@ -86,17 +111,38 @@ export function ProductDetail({ productId }) {
     navigate(`/producto/${relatedProductId}`)
   }
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: product.description,
-        url: window.location.href,
-      })
-    } else {
-      navigator.clipboard.writeText(window.location.href)
-      alert("Enlace copiado al portapapeles")
+  // Función de compartir con fallback y SweetAlert
+  const handleShare = async () => {
+    const shareData = {
+      title: product.name,
+      text: `Echa un vistazo a este producto: ${product.name}`,
+      url: window.location.href,
     }
+    try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          throw new Error('Share API not supported');
+        }
+    } catch (err) {
+        // Fallback para navegadores que no soportan la Share API
+        navigator.clipboard.writeText(window.location.href);
+        Swal.fire({
+            icon: 'success',
+            title: '¡Enlace copiado!',
+            text: 'El enlace del producto se ha copiado a tu portapapeles.',
+            timer: 2000,
+            showConfirmButton: false,
+        });
+    }
+  }
+
+  const decreaseQuantity = () => {
+    setQuantity((q) => Math.max(1, q - 1))
+  }
+
+  const increaseQuantity = () => {
+    setQuantity((q) => q + 1)
   }
 
   if (loading) {
@@ -176,11 +222,11 @@ export function ProductDetail({ productId }) {
             <div className="quantity-controls-wrapper">
               <span className="quantity-label">Cantidad:</span>
               <div className="quantity-controls">
-                <button onClick={() => setQuantity((q) => Math.max(1, q + 1))} className="quantity-btn">
+                <button onClick={increaseQuantity} className="quantity-btn" aria-label="Aumentar cantidad">
                   <Plus />
                 </button>
                 <span className="quantity-value">{quantity}</span>
-                <button onClick={() => setQuantity((q) => q - 1)} className="quantity-btn">
+                <button onClick={decreaseQuantity} className="quantity-btn" aria-label="Disminuir cantidad">
                   <Minus />
                 </button>
               </div>
@@ -202,7 +248,7 @@ export function ProductDetail({ productId }) {
               <button onClick={handleAddToCart} className="add-cart-btn">
                 <ShoppingCart /> Al Carrito
               </button>
-              <button onClick={handleShare} className="share-btn">
+              <button onClick={handleShare} className="share-btn" aria-label="Compartir producto">
                 <Share2 />
               </button>
             </div>
