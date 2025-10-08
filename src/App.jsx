@@ -69,18 +69,9 @@ const AppContainer = () => {
   }, []);
 
   const promos = [
-    {
-      title: "Ofertas de Temporada",
-      description: "Descuentos increíbles",
-      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop",
-      link: "/promociones/temporada"
-    },
-    {
-      title: "Productos Frescos",
-      description: "Calidad garantizada",
-      image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&auto=format&fit=crop",
-      link: "/categoria/frescos"
-    }
+    { imgUrl: "https://blog.supermercadosmas.com/wp-content/uploads/2018/03/700x700-20.png", imgAlt: "Cortes de carne", badge: "HASTA 15% DE DESCUENTO", title: "En surtido de Carnes seleccionadas", subtitle: "Solo esta semana", ctaLabel: "Comprar ahora", ctaHref: "/categorias/carnes" },
+    { imgUrl: "https://images.pexels.com/photos/3296273/pexels-photo-3296273.jpeg?auto=compress&cs=tinysrgb&w=1600", imgAlt: "Pescados y mariscos", badge: "DISFRUTA", title: "Nuestro surtido de Pescados y Mariscos", subtitle: "Fresco todos los días", ctaLabel: "Comprar ahora", ctaHref: "/categorias/pescados" },
+    { imgUrl: "https://images.pexels.com/photos/750952/pexels-photo-750952.jpeg?auto=compress&cs=tinysrgb&w=1600", imgAlt: "Vegetales frescos", badge: "VARIEDAD Y FRESCURA", title: "En frutas y vegetales", subtitle: "Aprovecha las ofertas", ctaLabel: "Comprar ahora", ctaHref: "/categorias/vegetales", span: "wide" },
   ];
 
   return (
