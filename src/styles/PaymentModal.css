@@ -124,6 +124,22 @@
   color: #555;
 }
 
+.order-summary-details {
+  padding: 1rem 0;
+  border-top: 1px solid #f0e9e4;
+  border-bottom: 1px solid #f0e9e4;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  color: #555;
+}
+
 .order-summary-total {
   display: flex;
   justify-content: space-between;

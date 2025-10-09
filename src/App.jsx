@@ -11,12 +11,13 @@ import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
 import { productsMock } from "./mocks/products";
 import { categoriesMock } from "./mocks/categories";
+import PaymentSuccessModal from './components/PaymentSuccessModal';
 
 // --- Componentes Separados para una Arquitectura Limpia ---
 
 // 1. Componente de Presentación (Layout)
 // No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
-const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen }) => (
+const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen, onPaymentComplete, isSuccessModalOpen, closeSuccessModal, transactionData }) => (
   <div className="min-h-screen flex flex-col">
     <Header />
     <main>
@@ -44,7 +45,12 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
       isOpen={isPaymentModalOpen} 
       onClose={() => setIsPaymentModalOpen(false)} 
       cartItems={cartItems || []} 
-      total={cartTotal} 
+      total={cartTotal}
+      onPaymentComplete={onPaymentComplete} 
+    />
+    <PaymentSuccessModal 
+      paymentData={transactionData}
+      onClose={closeSuccessModal}
     />
   </div>
 );
@@ -54,6 +60,8 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
 const AppContainer = () => {
   const { addToCart, cartItems } = useContext(CartContext);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [transactionData, setTransactionData] = useState(null);
 
   // Cálculo seguro del total del carrito
   const cartTotal = (cartItems || []).reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
@@ -62,6 +70,17 @@ const AppContainer = () => {
     if (cartItems && cartItems.length > 0) {
       setIsPaymentModalOpen(true);
     }
+  };
+
+  const handlePaymentComplete = (paymentData) => {
+    setTransactionData(paymentData);
+    setIsPaymentModalOpen(false);
+    setIsSuccessModalOpen(true);
+  };
+
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setTransactionData(null);
   };
 
   const promos = [
@@ -80,6 +99,10 @@ const AppContainer = () => {
       cartTotal={cartTotal}
       isPaymentModalOpen={isPaymentModalOpen}
       setIsPaymentModalOpen={setIsPaymentModalOpen}
+      onPaymentComplete={handlePaymentComplete}
+      isSuccessModalOpen={isSuccessModalOpen}
+      closeSuccessModal={closeSuccessModal}
+      transactionData={transactionData}
     />
   );
 }
@@ -90,7 +113,7 @@ export default function App() {
   return (
     <CartProvider>
       <Routes>
-        <Route path="/" element={<AppContainer />} />
+        <Route path="/*" element={<AppContainer />} />
       </Routes>
     </CartProvider>
   );

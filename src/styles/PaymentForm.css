@@ -33,7 +33,7 @@
 }
 
 .pf-method-btn.active {
-  background-color: #f08c5b;
+  background-color: #ec6426;
   color: white;
 }
 
@@ -112,4 +112,45 @@
   font-size: 0.75rem;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.pf-wallet-details {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.pf-wallet-header {
+  margin-bottom: 1.5rem;
+}
+
+.pf-wallet-icon {
+  color: #8b4513;
+  margin-bottom: 0.5rem;
+}
+
+.pf-wallet-header p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.pf-wallet-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.pf-wallet-btn {
+  background-color: #fff;
+  border: 1px solid #e0d8d1;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.pf-wallet-btn:hover {
+  background-color: #fef5ed;
+  border-color: #f8b885;
 }

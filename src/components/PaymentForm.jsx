@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
+import { PatternFormat } from 'react-number-format';
 import { useNavigate } from 'react-router-dom';
-import { CreditCard, ShieldCheck, Tag } from 'lucide-react';
+import { CreditCard, ShieldCheck, Wallet } from 'lucide-react';
 import '../styles/PaymentForm.css';
 
 const detectCardType = (number) => {
@@ -11,10 +12,11 @@ const detectCardType = (number) => {
   return null;
 };
 
-const PaymentForm = ({ onPaymentSuccess }) => {
+const PaymentForm = ({ onPaymentSuccess, total }, ref) => {
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
-  const [expiry, setExpiry] = useState('');
+  const [expiryMonth, setExpiryMonth] = useState('');
+  const [expiryYear, setExpiryYear] = useState('');
   const [cvv, setCvv] = useState('');
   const [cardType, setCardType] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -28,8 +30,18 @@ const PaymentForm = ({ onPaymentSuccess }) => {
     try {
       // Aquí iría la lógica real de procesamiento de pago
       await new Promise(resolve => setTimeout(resolve, 1500));
-      onPaymentSuccess();
-      navigate('/payment/success');
+
+      const paymentData = {
+        reference: `REF-${Date.now()}`,
+        date: new Date(),
+        method: `Tarjeta **** ${cardNumber.slice(-4)}`,
+        cardholder: cardName,
+        amount: total,
+      };
+
+      onPaymentSuccess(paymentData);
+            // La redirección ya se maneja en PaymentModal, por lo que esta línea es redundante.
+      // navigate('/payment-success');
     } catch (error) {
       console.error('Error procesando el pago:', error);
     } finally {
@@ -40,7 +52,7 @@ const PaymentForm = ({ onPaymentSuccess }) => {
   const [paymentMethod, setPaymentMethod] = useState('card');
 
   return (
-    <form onSubmit={handleSubmit} className="payment-form-container">
+        <form ref={ref} onSubmit={handleSubmit} className="payment-form-container">
       <div className="pf-section">
         <h3 className="pf-section-title">Método de Pago</h3>
         <div className="pf-method-options">
@@ -48,7 +60,7 @@ const PaymentForm = ({ onPaymentSuccess }) => {
             <CreditCard size={20} /> Tarjeta
           </button>
           <button type="button" className={`pf-method-btn ${paymentMethod === 'wallet' ? 'active' : ''}`} onClick={() => setPaymentMethod('wallet')}>
-            <Tag size={20} /> Wallet
+            <Wallet size={20} /> Wallet
           </button>
         </div>
       </div>
@@ -57,16 +69,16 @@ const PaymentForm = ({ onPaymentSuccess }) => {
         <div className="pf-section pf-card-details">
           <div className="pf-input-group">
             <label htmlFor="cardNumber">Número de Tarjeta</label>
-            <input 
-              type="text" 
-              id="cardNumber" 
-              placeholder="1234 5678 9012 3456" 
-              value={cardNumber} 
-              onChange={(e) => {
-                setCardNumber(e.target.value);
-                setCardType(detectCardType(e.target.value));
+            <PatternFormat
+              id="cardNumber"
+              format="#### #### #### ####"
+              placeholder="1234 5678 9012 3456"
+              value={cardNumber}
+              onValueChange={(values) => {
+                setCardNumber(values.value);
+                setCardType(detectCardType(values.value));
               }}
-              required 
+              required
             />
             {cardType && <div className="pf-card-type">{cardType}</div>}
           </div>
@@ -77,15 +89,36 @@ const PaymentForm = ({ onPaymentSuccess }) => {
           <div className="pf-row">
             <div className="pf-input-group">
               <label htmlFor="expiryMonth">Mes</label>
-              <input type="text" id="expiryMonth" placeholder="MM" value={expiry} onChange={(e) => setExpiry(e.target.value.split('/')[0] || '')} required />
+              <PatternFormat
+                id="expiryMonth"
+                format="##"
+                placeholder="MM"
+                value={expiryMonth}
+                onValueChange={(values) => setExpiryMonth(values.value)}
+                required
+              />
             </div>
             <div className="pf-input-group">
               <label htmlFor="expiryYear">Año</label>
-              <input type="text" id="expiryYear" placeholder="AA" value={expiry.split('/')[1] || ''} onChange={(e) => setExpiry(expiry.split('/')[0] + '/' + e.target.value)} required />
+              <PatternFormat
+                id="expiryYear"
+                format="##"
+                placeholder="AA"
+                value={expiryYear}
+                onValueChange={(values) => setExpiryYear(values.value)}
+                required
+              />
             </div>
             <div className="pf-input-group">
               <label htmlFor="cvv">CVV</label>
-              <input type="text" id="cvv" placeholder="123" value={cvv} onChange={(e) => setCvv(e.target.value)} required />
+              <PatternFormat
+                id="cvv"
+                format="###"
+                placeholder="123"
+                value={cvv}
+                onValueChange={(values) => setCvv(values.value)}
+                required
+              />
             </div>
           </div>
         </div>
@@ -93,7 +126,16 @@ const PaymentForm = ({ onPaymentSuccess }) => {
 
       {paymentMethod === 'wallet' && (
         <div className="pf-section pf-wallet-details">
-          <p>Próximamente: Paga con tu wallet digital.</p>
+          <div className="pf-wallet-header">
+            <Wallet size={40} className="pf-wallet-icon" />
+            <p>Selecciona tu wallet digital preferida</p>
+          </div>
+          <div className="pf-wallet-options">
+            <button type="button" className="pf-wallet-btn">PayPal</button>
+            <button type="button" className="pf-wallet-btn">Apple Pay</button>
+            <button type="button" className="pf-wallet-btn">Google Pay</button>
+            <button type="button" className="pf-wallet-btn">Samsung Pay</button>
+          </div>
         </div>
       )}
 
@@ -106,4 +148,4 @@ const PaymentForm = ({ onPaymentSuccess }) => {
   );
 };
 
-export default PaymentForm;
+export default forwardRef(PaymentForm);
