@@ -15,8 +15,20 @@ import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 
+// new Importaciones para tus pantallas de recuperación de contraseña
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyCode from "./pages/VerifyCode";
+import NewPassword from "./pages/NewPassword";
+
+
+// --- Componentes Separados para una Arquitectura Limpia ---
+
+// 1. Componente de Presentación (Layout)
+// No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
+
 // --- Componente de Presentación (Home Layout) ---
 const AppLayout = ({ promos, products, onAdd, loading }) => (
+
   <div className="min-h-screen flex flex-col">
     <Header />
     <main>
@@ -154,6 +166,10 @@ export default function App() {
             <Route path="/" element={<AppContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
+            {/* Password recovery routes */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/recover/code" element={<VerifyCode />} />
+            <Route path="/new-password" element={<NewPassword />} />
           </Routes>
         </GlobalCartWrapper>
       </OrdersProvider>
