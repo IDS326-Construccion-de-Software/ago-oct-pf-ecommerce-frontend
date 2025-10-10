@@ -12,6 +12,12 @@ import PaymentModal from './components/PaymentModal';
 import { productsMock } from "./mocks/products";
 import { categoriesMock } from "./mocks/categories";
 
+// new Importaciones para tus pantallas de recuperación de contraseña
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyCode from "./pages/VerifyCode";
+import NewPassword from "./pages/NewPassword";
+
+
 // --- Componentes Separados para una Arquitectura Limpia ---
 
 // 1. Componente de Presentación (Layout)
@@ -91,6 +97,11 @@ export default function App() {
     <CartProvider>
       <Routes>
         <Route path="/" element={<AppContainer />} />
+
+        {/*  Tus rutas nuevas */}
+         <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/recover/code" element={<VerifyCode />} />
+  <Route path="/new-password" element={<NewPassword />} />
       </Routes>
     </CartProvider>
   );
