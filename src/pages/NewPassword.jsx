@@ -13,6 +13,8 @@ export default function NewPassword() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [msg, setMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
 
   useEffect(() => {
     if (!isCodeVerified) {
@@ -32,10 +34,10 @@ export default function NewPassword() {
       setMsg("Las contraseñas no coinciden.");
       return;
     }
-    // UI-only: simulamos éxito
-    alert(" Contraseña restablecida con éxito");
-    resetRecovery(); // limpiamos el flujo
-    navigate("/login");
+    // Simula actualización exitosa
+    setSuccessMsg("¡Contraseña actualizada exitosamente!"); // <-- 2. Actualiza el mensaje de éxito
+    setMsg(""); // Oculta el mensaje de error si todo salió bien
+    // ...aquí podrías limpiar los campos o redirigir...
   };
 
   return (
@@ -74,6 +76,7 @@ export default function NewPassword() {
 
   <button type="submit" className="np-btn-primary">Actualizar Contraseña</button>
   <button type="button" className="np-btn-secondary" onClick={() => navigate(-1)}>Atrás</button>
+  {successMsg && <div className="np-success">{successMsg}</div>} {/* <-- 3. Muestra el mensaje debajo del formulario */}
 </form>
 
       </div>

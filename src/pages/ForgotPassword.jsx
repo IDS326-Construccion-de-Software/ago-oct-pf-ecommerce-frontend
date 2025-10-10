@@ -63,9 +63,10 @@ export default function ForgotPassword() {
           <button type="submit" className="fp-btn-primary">Enviar código de acceso</button>
         </form>
 
-        {message && <p className="fp-message">{message}</p>}
-
+        
         <button onClick={() => navigate("/")} className="fp-btn-secondary">Atrás</button>
+        {/* Mensaje de éxito debajo de los botones */}
+      {message && <div className="fp-success">{message}</div>}
       </div>
     </div>
   );
