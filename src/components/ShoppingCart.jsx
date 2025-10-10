@@ -18,7 +18,7 @@ export default function ShoppingCart({ onCheckout }) {
     isCartOpen,
     setIsCartOpen,
     clearCart,
-    removeFromCart,
+    removeItem,
     increaseQuantity,
     decreaseQuantity,
   } = context;
@@ -83,13 +83,13 @@ export default function ShoppingCart({ onCheckout }) {
                       className="cart-item-image"
                     />
                   )}
-                  <div className="item-info">
-                    <span className="item-name">{item.name}</span>
-                    <span className="item-price">
-                      ${Number(item.price).toFixed(2)} x {item.quantity} = $
-                      {(Number(item.price) * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
+                    <div className="item-info">
+                      <span className="item-name">{item.name}</span>
+                      <span className="item-price">
+                        ${Number(item.price).toLocaleString("en-US", { minimumFractionDigits: 2 })} <br /> $
+                        {(Number(item.price) * item.quantity).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
                   <div className="item-actions">
                     <div className="quantity-controls">
                       <button onClick={() => increaseQuantity(item.id)}>
@@ -102,7 +102,7 @@ export default function ShoppingCart({ onCheckout }) {
                     </div>
                     <button
                       className="remove-btn"
-                      onClick={() => removeFromCart(item.id)} // Usar ID es más seguro que el índice
+                      onClick={() => removeItem(item.id)} 
                     >
                       <X size={16} />
                     </button>
