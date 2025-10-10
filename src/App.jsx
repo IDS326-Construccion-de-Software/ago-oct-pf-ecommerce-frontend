@@ -12,6 +12,7 @@ import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
 import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
+import SignupPage from './pages/SignupPage';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 
@@ -153,6 +154,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<AppContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
           </Routes>
         </GlobalCartWrapper>
