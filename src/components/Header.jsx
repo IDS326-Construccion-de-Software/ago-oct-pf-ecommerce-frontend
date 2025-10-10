@@ -8,7 +8,9 @@ import { CartContext } from "../context/CartContext";
 export default function Header() {
   const { cartItems, setIsCartOpen } = useContext(CartContext); 
 
-  const toggleCart = () => setIsCartOpen(true);
+  const toggleCart = () => {
+    setIsCartOpen(true);
+  };
 
   const CATEGORIES = [
     "Aperitivos", "Postres", "Congelados", "Bebidas", "Pescados", 
