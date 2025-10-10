@@ -12,6 +12,7 @@ const detectCardType = (number) => {
   return null;
 };
 
+
 const PaymentForm = ({ onPaymentSuccess, total }, ref) => {
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');

@@ -34,6 +34,10 @@ export default function Header() {
                 <User size={16} /> Iniciar sesión
               </NavLink>
               <span className="sep">|</span>
+              <NavLink to="/orders" className="link">
+                Mis Pedidos
+              </NavLink>
+              <span className="sep">|</span>
               <button className="link" onClick={toggleCart}>
                 <CartIcon size={16} /> Mi Carrito ({cartItems.length}) 
               </button>
