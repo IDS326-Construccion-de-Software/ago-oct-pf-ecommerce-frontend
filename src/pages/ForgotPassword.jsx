@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import "../styles/ForgotPassword.css";
 import logo from "../assets/LogoTheRevenge.svg"; 
 import inboxIcon from "../assets/Inbox.svg";
+import validator from "validator";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -13,10 +14,8 @@ export default function ForgotPassword() {
   const navigate = useNavigate();
   const { setRecoveryEmail, setIsCodeVerified } = useAuth();
 
-  const validate = (value) => {
-    // validación simple email
-    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
-  };
+   // Usa validator para validar el email
+  const validate = (value) => validator.isEmail(value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
