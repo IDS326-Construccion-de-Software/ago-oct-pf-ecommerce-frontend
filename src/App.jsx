@@ -15,7 +15,6 @@ import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 
-<<<<<<< HEAD
 // new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyCode from "./pages/VerifyCode";
@@ -26,11 +25,10 @@ import NewPassword from "./pages/NewPassword";
 
 // 1. Componente de Presentación (Layout)
 // No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
-const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen }) => (
-=======
+
 // --- Componente de Presentación (Home Layout) ---
 const AppLayout = ({ promos, products, onAdd, loading }) => (
->>>>>>> upstream/dev
+
   <div className="min-h-screen flex flex-col">
     <Header />
     <main>
@@ -162,26 +160,19 @@ const GlobalCartWrapper = ({ children }) => {
 export default function App() {
   return (
     <CartProvider>
-<<<<<<< HEAD
-      <Routes>
-        <Route path="/" element={<AppContainer />} />
-
-        {/*  Tus rutas nuevas */}
-         <Route path="/forgot-password" element={<ForgotPassword />} />
-  <Route path="/recover/code" element={<VerifyCode />} />
-  <Route path="/new-password" element={<NewPassword />} />
-      </Routes>
-=======
       <OrdersProvider>
         <GlobalCartWrapper>
           <Routes>
             <Route path="/" element={<AppContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
+            {/* Password recovery routes */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/recover/code" element={<VerifyCode />} />
+            <Route path="/new-password" element={<NewPassword />} />
           </Routes>
         </GlobalCartWrapper>
       </OrdersProvider>
->>>>>>> upstream/dev
     </CartProvider>
   );
 }
