@@ -1,12 +1,12 @@
-import { useContext } from "react";
+import { use, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../assets/LogoTheRevenge.svg";
 import { User, ShoppingCart as CartIcon, HelpCircle, Search } from "lucide-react";
 import "../styles/Header.css";
-import { CartContext } from "../context/CartContext"; 
+import { useCart } from "../context/CartContext";
 
 export default function Header() {
-  const { cartItems, setIsCartOpen } = useContext(CartContext); 
+  const { cartItems, setIsCartOpen } = useCart(); 
 
   const toggleCart = () => {
     setIsCartOpen(true);

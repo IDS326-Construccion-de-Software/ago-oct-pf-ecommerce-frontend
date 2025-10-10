@@ -14,6 +14,7 @@ import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
+import CartDetail from './pages/CartDetail';
 
 // --- Componente de Presentación (Home Layout) ---
 const AppLayout = ({ promos, products, onAdd, loading }) => (
@@ -154,6 +155,7 @@ export default function App() {
             <Route path="/" element={<AppContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
+            <Route path="/cartDetail" element={<CartDetail />} />
           </Routes>
         </GlobalCartWrapper>
       </OrdersProvider>
