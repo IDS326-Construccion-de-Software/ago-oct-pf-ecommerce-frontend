@@ -2,7 +2,7 @@
 .cart-detail-container {
   display: flex;
   justify-content: space-between;
-  width: 85%;
+  width: 75%;
   margin: 40px auto;
   gap: 40px;
   align-items: flex-start;
@@ -127,12 +127,7 @@
   font-size: 1.3rem;
   color: #632713;
   margin-bottom: 15px;
-}
-
-.summary-box p {
-  font-size: 1rem;
-  color: #632713;
-  margin: 8px 0;
+  text-align: left;
 }
 
 .summary-box hr {
@@ -141,10 +136,23 @@
   border-top: 1px solid rgba(236, 100, 38, 0.2);
 }
 
-.summary-box .total {
+/* Nueva clase para alinear texto a la izquierda y montos a la derecha */
+.summary-line {
+  display: flex;
+  justify-content: space-between; /* separa texto y valor */
+  align-items: center;
+  font-size: 1rem;
+  color: #632713;
+  margin: 8px 0;
+}
+
+/* Estilo del total */
+.summary-line.total {
   font-weight: 700;
   font-size: 1.2rem;
   color: #EC6426;
+  border-top: 2px solid rgba(236, 100, 38, 0.2);
+  padding-top: 10px;
 }
 
 .checkout-btn {
