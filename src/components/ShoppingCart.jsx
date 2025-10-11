@@ -1,27 +1,25 @@
-import { useState, useEffect, useContext } from "react";
-import { X, Plus, Minus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
 import "../styles/ShoppingCart.css";
 import Modal from "./Modal";
-import { CartContext } from "../context/CartContext";
+import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import CartItemList from "../components/CartItemsList"; 
 
 export default function ShoppingCart({ onCheckout }) {
-  const context = useContext(CartContext);
+  const navigate = useNavigate();
 
-  // Guardia de seguridad: si el contexto no está disponible, no renderizar nada.
-  // Esto previene el error de pantalla en blanco.
-  if (!context) {
-    return null;
-  }
+  const goToCartDetail = () => {
+    navigate("/cartDetail");
+    setIsCartOpen(false);
+  };
 
   const {
     cartItems,
     isCartOpen,
     setIsCartOpen,
     clearCart,
-    removeFromCart,
-    increaseQuantity,
-    decreaseQuantity,
-  } = context;
+  } = useCart();
 
   const [showInstantPay, setShowInstantPay] = useState(false);
 
@@ -40,13 +38,12 @@ export default function ShoppingCart({ onCheckout }) {
   const handleConfirmPay = () => {
     setShowInstantPay(false);
     if (onCheckout) {
-      onCheckout(); // Llama a la función de checkout si existe
+      onCheckout(); 
     }
     clearCart();
     setIsCartOpen(false);
   };
 
-  // Cálculo seguro del total
   const total = (cartItems || []).reduce(
     (acc, item) => acc + Number(item.price) * (item.quantity || 0),
     0
@@ -65,7 +62,7 @@ export default function ShoppingCart({ onCheckout }) {
         </div>
 
         <h2>Mi Carrito</h2>
-        
+
         {(cartItems || []).length === 0 ? (
           <p className="empty-cart-message">
             Tu carrito está vacío.<br />
@@ -73,51 +70,16 @@ export default function ShoppingCart({ onCheckout }) {
           </p>
         ) : (
           <>
-            <ul className="cart-items">
-              {cartItems.map((item, index) => (
-                <li key={item.id || index} className="cart-item-card">
-                  {item.image && (
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="cart-item-image"
-                    />
-                  )}
-                  <div className="item-info">
-                    <span className="item-name">{item.name}</span>
-                    <span className="item-price">
-                      ${Number(item.price).toFixed(2)} x {item.quantity} = $
-                      {(Number(item.price) * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="item-actions">
-                    <div className="quantity-controls">
-                      <button onClick={() => increaseQuantity(item.id)}>
-                        <Plus size={16} />
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => decreaseQuantity(item.id)}>
-                        <Minus size={16} />
-                      </button>
-                    </div>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.id)} // Usar ID es más seguro que el índice
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-
+            <CartItemList />
             <div className="cart-footer">
               <div className="cart-total">
                 <span>Total:</span>
-                <strong>${total.toFixed(2)}</strong>
+                <strong>
+                  ${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                </strong>
               </div>
               <div className="cart-actions">
-                <button className="checkout-btn" onClick={onCheckout}>
+                <button className="checkout-btn" onClick={goToCartDetail}>
                   Ir a Pagar
                 </button>
                 <button

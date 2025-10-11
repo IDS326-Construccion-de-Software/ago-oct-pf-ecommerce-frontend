@@ -174,6 +174,12 @@ export default function App() {
             <Route path="/" element={<HomePageContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
+            
+            <Route path="/cartDetail" element={<CartDetail />} />
+            {/* Password recovery routes */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/recover/code" element={<VerifyCode />} />
+            <Route path="/new-password" element={<NewPassword />} />
           </Routes>
         </GlobalWrapper>
       </OrdersProvider>
