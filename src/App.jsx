@@ -1,6 +1,7 @@
-import { Routes, Route } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { Routes, Route, useParams } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
 import { CartProvider, CartContext } from "./context/CartContext";
+import { OrdersProvider } from "./context/OrdersContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import BannerSlider from "./components/BannerSlider";
@@ -9,15 +10,26 @@ import PromoGrid from "./components/PromoGrid";
 import CategoryCarousel from "./components/CategoryCarousel";
 import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
-import { productsMock } from "./mocks/products";
+import OrdersManager from './components/OrdersManager';
+import { ProductDetail } from './components/ProductDetail';
+import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 import Login from './pages/Login';
+
+// new Importaciones para tus pantallas de recuperación de contraseña
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyCode from "./pages/VerifyCode";
+import NewPassword from "./pages/NewPassword";
+
 
 // --- Componentes Separados para una Arquitectura Limpia ---
 
 // 1. Componente de Presentación (Layout)
 // No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
-const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentModalOpen, setIsPaymentModalOpen }) => (
+
+// --- Componente de Presentación (Home Layout) ---
+const AppLayout = ({ promos, products, onAdd, loading }) => (
+
   <div className="min-h-screen flex flex-col">
     <Header />
     <main>
@@ -25,11 +37,15 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
         <BannerSlider autoPlay delay={5000} fit="cover" rounded />
       </div>
       <div className="container" style={{ paddingBottom: "32px" }}>
-        <ProductCarousel
-          title="Disfruta de nuestra selección"
-          products={productsMock}
-          onAdd={onAdd}
-        />
+        {loading ? (
+          <div className="text-center py-8">Cargando productos...</div>
+        ) : (
+          <ProductCarousel
+            title="Disfruta de nuestra selección"
+            products={products}
+            onAdd={onAdd}
+          />
+        )}
       </div>
       <PromoGrid items={promos} />
       <div className="container" style={{ padding: "32px 0" }}>
@@ -40,30 +56,30 @@ const AppLayout = ({ promos, onAdd, onCheckout, cartItems, cartTotal, isPaymentM
       </div>
     </main>
     <Footer />
-    <ShoppingCart onCheckout={onCheckout} />
-    <PaymentModal 
-      isOpen={isPaymentModalOpen} 
-      onClose={() => setIsPaymentModalOpen(false)} 
-      cartItems={cartItems || []} 
-      total={cartTotal} 
-    />
   </div>
 );
 
-// 2. Componente Contenedor (Lógica)
-// Se encarga de la lógica, el estado y el acceso al contexto.
+// --- Componente Contenedor Home ---
 const AppContainer = () => {
-  const { addToCart, cartItems } = useContext(CartContext);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const { addToCart } = useContext(CartContext);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Cálculo seguro del total del carrito
-  const cartTotal = (cartItems || []).reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
-
-  const handleCheckout = () => {
-    if (cartItems && cartItems.length > 0) {
-      setIsPaymentModalOpen(true);
-    }
-  };
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await getAllProducts(1, 20);
+        setProducts(response.items);
+      } catch (error) {
+        console.error('Error cargando productos:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProducts();
+  }, []);
 
   const promos = [
     { imgUrl: "https://blog.supermercadosmas.com/wp-content/uploads/2018/03/700x700-20.png", imgAlt: "Cortes de carne", badge: "HASTA 15% DE DESCUENTO", title: "En surtido de Carnes seleccionadas", subtitle: "Solo esta semana", ctaLabel: "Comprar ahora", ctaHref: "/categorias/carnes" },
@@ -71,29 +87,97 @@ const AppContainer = () => {
     { imgUrl: "https://images.pexels.com/photos/750952/pexels-photo-750952.jpeg?auto=compress&cs=tinysrgb&w=1600", imgAlt: "Vegetales frescos", badge: "VARIEDAD Y FRESCURA", title: "En frutas y vegetales", subtitle: "Aprovecha las ofertas", ctaLabel: "Comprar ahora", ctaHref: "/categorias/vegetales", span: "wide" },
   ];
 
-  // Pasa toda la lógica y datos al componente de presentación
   return (
     <AppLayout 
       promos={promos}
+      products={products}
       onAdd={addToCart}
-      onCheckout={handleCheckout}
-      cartItems={cartItems}
-      cartTotal={cartTotal}
-      isPaymentModalOpen={isPaymentModalOpen}
-      setIsPaymentModalOpen={setIsPaymentModalOpen}
+      loading={loading}
     />
   );
-}
+};
 
-// 3. Componente Principal (Raíz)
-// Configura los proveedores globales (Contexto, Router)
+// --- Página de Orders ---
+const OrdersPage = () => (
+  <div className="min-h-screen flex flex-col">
+    <Header />
+    <main className="flex-1">
+      <div className="container mx-auto px-4 py-8">
+        <OrdersManager />
+      </div>
+    </main>
+    <Footer />
+  </div>
+);
+
+// --- Página de Detalle de Producto ---
+const ProductDetailPage = () => {
+  const { id } = useParams();
+  const { addToCart } = useContext(CartContext); 
+  
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <ProductDetail productId={id} onAddToCart={addToCart} />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// --- Componente Wrapper con Carrito Global ---
+const GlobalCartWrapper = ({ children }) => {
+  const { cartItems, setIsCartOpen } = useContext(CartContext);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  const cartTotal = (cartItems || []).reduce(
+    (total, item) => total + (item.price * (item.quantity || 1)), 
+    0
+  );
+
+  const handleCheckout = () => {
+    if (cartItems && cartItems.length > 0) {
+      setIsCartOpen(false);
+      setIsPaymentModalOpen(true);
+    }
+  };
+
+  return (
+    <>
+      {children}
+      <ShoppingCart onCheckout={handleCheckout} />
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+        cartItems={cartItems || []} 
+        total={cartTotal} 
+      />
+    </>
+  );
+};
+
+// --- Componente Principal (Raíz) ---
 export default function App() {
   return (
     <CartProvider>
-      <Routes>
-        <Route path="/" element={<AppContainer />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+
+
+      <OrdersProvider>
+        <GlobalCartWrapper>
+          <Routes>
+            <Route path="/" element={<AppContainer />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/producto/:id" element={<ProductDetailPage />} />
+            {/* Password recovery routes */}
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/recover/code" element={<VerifyCode />} />
+            <Route path="/new-password" element={<NewPassword />} />
+             <Route path="/login" element={<Login />} />
+          </Routes>
+        </GlobalCartWrapper>
+      </OrdersProvider>
+
     </CartProvider>
   );
 }
