@@ -14,6 +14,7 @@ import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
+import CartDetail from './pages/CartDetail';
 
 // new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
@@ -166,6 +167,8 @@ export default function App() {
             <Route path="/" element={<AppContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
+            
+            <Route path="/cartDetail" element={<CartDetail />} />
             {/* Password recovery routes */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/recover/code" element={<VerifyCode />} />
