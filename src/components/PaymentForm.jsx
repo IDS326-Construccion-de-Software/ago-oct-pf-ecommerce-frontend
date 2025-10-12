@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CreditCard, ShieldCheck, Tag } from 'lucide-react';
+import { PatternFormat } from 'react-number-format';
+import Swal from 'sweetalert2';
+import { CreditCard, ShieldCheck, Tag, Wallet } from 'lucide-react';
 import '../styles/PaymentForm.css';
+
+// Spinner component for loading feedback
+const Spinner = () => <div className="spinner"></div>;
 
 const detectCardType = (number) => {
   const cleaned = number.replace(/\s/g, '');
@@ -14,30 +18,44 @@ const detectCardType = (number) => {
 const PaymentForm = ({ onPaymentSuccess }) => {
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
-  const [expiry, setExpiry] = useState('');
+  const [expiryMonth, setExpiryMonth] = useState('');
+  const [expiryYear, setExpiryYear] = useState('');
   const [cvv, setCvv] = useState('');
   const [cardType, setCardType] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const navigate = useNavigate();
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [selectedWallet, setSelectedWallet] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isProcessing) return;
+
     setIsProcessing(true);
-    
-    // Simular procesamiento de pago
     try {
-      // Aquí iría la lógica real de procesamiento de pago
+      // Simular llamada a API de pago
       await new Promise(resolve => setTimeout(resolve, 1500));
-      onPaymentSuccess();
-      navigate('/payment/success');
+      
+      let paymentData = {};
+      if (paymentMethod === 'card') {
+        paymentData = { method: 'Tarjeta', cardNumber, cardName, expiry: `${expiryMonth}/${expiryYear}` };
+      } else if (paymentMethod === 'wallet') {
+        paymentData = { method: selectedWallet, cardName: 'N/A', cardNumber: '****' };
+      }
+
+      onPaymentSuccess({ cardNumber, cardName, expiry: `${expiryMonth}/${expiryYear}`, cvv });
+
     } catch (error) {
       console.error('Error procesando el pago:', error);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error en el Pago!',
+        text: 'No se pudo procesar tu pago. Por favor, intenta de nuevo.',
+        confirmButtonColor: '#f08c5b'
+      });
     } finally {
       setIsProcessing(false);
     }
   };
-
-  const [paymentMethod, setPaymentMethod] = useState('card');
 
   return (
     <form onSubmit={handleSubmit} className="payment-form-container">
@@ -57,16 +75,17 @@ const PaymentForm = ({ onPaymentSuccess }) => {
         <div className="pf-section pf-card-details">
           <div className="pf-input-group">
             <label htmlFor="cardNumber">Número de Tarjeta</label>
-            <input 
-              type="text" 
-              id="cardNumber" 
-              placeholder="1234 5678 9012 3456" 
-              value={cardNumber} 
-              onChange={(e) => {
-                setCardNumber(e.target.value);
-                setCardType(detectCardType(e.target.value));
+            <PatternFormat
+              id="cardNumber"
+              format="#### #### #### ####"
+              placeholder="1234 5678 9012 3456"
+              mask="_"
+              value={cardNumber}
+              onValueChange={(values) => {
+                setCardNumber(values.value);
+                setCardType(detectCardType(values.value));
               }}
-              required 
+              required
             />
             {cardType && <div className="pf-card-type">{cardType}</div>}
           </div>
@@ -77,15 +96,39 @@ const PaymentForm = ({ onPaymentSuccess }) => {
           <div className="pf-row">
             <div className="pf-input-group">
               <label htmlFor="expiryMonth">Mes</label>
-              <input type="text" id="expiryMonth" placeholder="MM" value={expiry} onChange={(e) => setExpiry(e.target.value.split('/')[0] || '')} required />
+              <PatternFormat
+                id="expiryMonth"
+                format="##"
+                placeholder="MM"
+                mask={['M', 'M']}
+                value={expiryMonth}
+                onValueChange={(values) => setExpiryMonth(values.value)}
+                required
+              />
             </div>
             <div className="pf-input-group">
               <label htmlFor="expiryYear">Año</label>
-              <input type="text" id="expiryYear" placeholder="AA" value={expiry.split('/')[1] || ''} onChange={(e) => setExpiry(expiry.split('/')[0] + '/' + e.target.value)} required />
+              <PatternFormat
+                id="expiryYear"
+                format="##"
+                placeholder="YY"
+                mask={['Y', 'Y']}
+                value={expiryYear}
+                onValueChange={(values) => setExpiryYear(values.value)}
+                required
+              />
             </div>
             <div className="pf-input-group">
               <label htmlFor="cvv">CVV</label>
-              <input type="text" id="cvv" placeholder="123" value={cvv} onChange={(e) => setCvv(e.target.value)} required />
+              <PatternFormat
+                id="cvv"
+                format="####"
+                placeholder="123"
+                mask="_"
+                value={cvv}
+                onValueChange={(values) => setCvv(values.value)}
+                required
+              />
             </div>
           </div>
         </div>
@@ -93,7 +136,22 @@ const PaymentForm = ({ onPaymentSuccess }) => {
 
       {paymentMethod === 'wallet' && (
         <div className="pf-section pf-wallet-details">
-          <p>Próximamente: Paga con tu wallet digital.</p>
+          <div className="pf-wallet-prompt">
+            <Wallet size={22} />
+            <p>Selecciona tu wallet digital preferida</p>
+          </div>
+          <div className="pf-wallet-options">
+            {['PayPal', 'Apple Pay', 'Google Pay', 'Samsung Pay'].map(wallet => (
+              <button 
+                key={wallet}
+                type="button" 
+                className={`pf-wallet-btn ${selectedWallet === wallet ? 'active' : ''}`}
+                onClick={() => setSelectedWallet(wallet)}
+              >
+                {wallet}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -102,6 +160,16 @@ const PaymentForm = ({ onPaymentSuccess }) => {
         <span className="pf-badge">Verificado</span>
         <span className="pf-badge">Encriptado</span>
       </div>
+
+      <button 
+        type="submit" 
+        className="pay-button" 
+        disabled={isProcessing || (paymentMethod === 'wallet' && !selectedWallet)}
+      >
+        {isProcessing ? (
+          <><Spinner /> Procesando...</>
+        ) : 'Pagar'}
+      </button>
     </form>
   );
 };
