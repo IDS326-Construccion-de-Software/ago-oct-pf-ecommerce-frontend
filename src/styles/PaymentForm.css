@@ -98,7 +98,6 @@
   font-size: 0.8rem;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
 }
 
 .pf-card-type {
@@ -112,4 +111,74 @@
   font-size: 0.75rem;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+/* Wallet Section Styles */
+.pf-wallet-details {
+  text-align: center;
+}
+
+.pf-wallet-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+.pf-wallet-prompt svg {
+  color: #f08c5b;
+}
+
+.pf-wallet-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.pf-wallet-btn {
+  background-color: #fff;
+  border: 1px solid #e0d8d1;
+  padding: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.pf-wallet-btn:hover {
+  border-color: #f08c5b;
+  color: #f08c5b;
+}
+
+.pf-wallet-btn.active {
+  border-color: #f08c5b;
+  background-color: #fef5f0;
+  color: #d9794a;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px #f08c5b40;
+}
+
+/* Spinner Styles */
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.pay-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

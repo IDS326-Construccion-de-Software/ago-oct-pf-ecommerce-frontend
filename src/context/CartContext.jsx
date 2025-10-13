@@ -14,6 +14,9 @@ export const useCart = () => {
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);  
   const [isCartOpen, setIsCartOpen] = useState(false); 
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [latestOrder, setLatestOrder] = useState(null);
 
   // Helper: Normalizar el producto para asegurar que tenga el campo 'image'
   const normalizeProduct = (product) => {
@@ -103,6 +106,12 @@ export function CartProvider({ children }) {
       setIsCartOpen,
       increaseQuantity,
       decreaseQuantity,
+      isPaymentModalOpen,
+      setIsPaymentModalOpen,
+      isConfirmationModalOpen,
+      setIsConfirmationModalOpen,
+      latestOrder,
+      setLatestOrder,
     }}
     >
       {children}
