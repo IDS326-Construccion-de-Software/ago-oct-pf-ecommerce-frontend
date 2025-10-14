@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
 import '../styles/auth.css'
 import logoUrl from '../assets/LogoTheRevenge.svg' // logo 
+import isEmail from 'validator/lib/isEmail';
 
 /* ===== Iconos ===== */
 function MailIcon(){ return (
@@ -55,7 +56,8 @@ export default function Login(){
   async function onSubmit(e){
     e.preventDefault()
     setError('')
-    if(!/^\S+@\S+\.\S+$/.test(email)) return setError('Correo inválido.')
+    const emailToCheck = email.trim();
+    if (!isEmail(emailToCheck)) return setError('Correo inválido.');
     if(!pwd) return setError('Ingrese su contraseña.')
 
     // TODO: reemplazar por llamada real a tu API
