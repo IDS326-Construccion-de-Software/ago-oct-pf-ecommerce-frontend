@@ -1,7 +1,5 @@
-import React from 'react';
 import { createPortal } from 'react-dom';
 import React from 'react';
-import { createPortal } from 'react-dom';
 import jsPDF from 'jspdf';
 import '../styles/OrderConfirmationModal.css';
 
@@ -17,7 +15,7 @@ const OrderConfirmationModal = ({ isOpen, onClose, order }) => {
       doc.setFontSize(22);
       doc.setFont('helvetica', 'bold');
       doc.text('The Revenge', 105, yPos, { align: 'center' });
-      yPos += 8;
+      yPos += 8;  
       doc.setFontSize(16);
       doc.setFont('helvetica', 'normal');
       doc.text('Recibo de Compra', 105, yPos, { align: 'center' });
