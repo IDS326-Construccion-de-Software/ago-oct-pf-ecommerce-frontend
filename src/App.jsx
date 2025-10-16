@@ -17,11 +17,15 @@ import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
 import CartDetail from './pages/CartDetail';
 import Products from './pages/Products';
+import SettingsPage from './pages/SettingsPage';
 
 // new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyCode from "./pages/VerifyCode";
 import NewPassword from "./pages/NewPassword";
+import { SettingsProvider } from './context/SettingContext';
+import UserProfile from './pages/UserProfile';
+import { AuthProvider } from './context/AuthContext';
 
 
 // --- Componentes Separados para una Arquitectura Limpia ---
@@ -180,22 +184,28 @@ const GlobalCartWrapper = ({ children }) => {
 // --- Componente Principal (Raíz) ---
 export default function App() {
   return (
-    <CartProvider>
-      <OrdersProvider>
-        <GlobalCartWrapper>
-          <Routes>
-            <Route path="/" element={<AppContainer />} />
-            <Route path="/orders" element={<OrdersPage />} />
-            <Route path="/producto/:id" element={<ProductDetailPage />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/cartDetail" element={<CartDetail />} />
-            {/* Password recovery routes */}
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/recover/code" element={<VerifyCode />} />
-            <Route path="/new-password" element={<NewPassword />} />
-          </Routes>
-        </GlobalCartWrapper>
-      </OrdersProvider>
-    </CartProvider>
+    <AuthProvider>
+    <SettingsProvider>
+      <CartProvider>
+          <OrdersProvider>
+            <GlobalCartWrapper>
+              <Routes>
+                <Route path="/" element={<AppContainer />} />
+                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/producto/:id" element={<ProductDetailPage />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/cartDetail" element={<CartDetail />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                {/* Password recovery routes */}
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/recover/code" element={<VerifyCode />} />
+                <Route path="/new-password" element={<NewPassword />} />
+              </Routes>
+            </GlobalCartWrapper>
+          </OrdersProvider>
+      </CartProvider>
+    </SettingsProvider>
+  </AuthProvider>
   );
 }

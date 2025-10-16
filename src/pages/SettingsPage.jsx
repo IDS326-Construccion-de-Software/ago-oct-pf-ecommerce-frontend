@@ -1,49 +1,39 @@
-import React, { useState } from 'react';
-import { ChevronDown, Save } from 'lucide-react';
-import './SettingsPage.css';
+import React from 'react';
+import { Save } from 'lucide-react';
+import { useSettings } from '../context/SettingContext';
+import '../styles/SettingsPage.css'; 
+import Header from "../components/Header";
 
 const SettingsPage = () => {
-  const [settings, setSettings] = useState({
-    // Configuración de Cuenta
-    changePassword: false,
-    twoFactor: false,
-    deleteAccount: false,
-    
-    // Preferencias de Comunicación
-    emailNotifications: true,
-    smsPromo: false,
-    pushNotifications: true,
-    
-    // Idioma y Región
-    language: 'es',
-    timezone: 'GMT-4',
-    currency: 'DOP',
-    
-    // Privacidad
-    publicProfile: false,
-    shareUsageData: false
-  });
-
-  const handleToggle = (key) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  const handleSelectChange = (key, value) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
-  const handleSaveChanges = () => {
-    console.log('Cambios guardados:', settings);
-    alert('Cambios guardados exitosamente');
-  };
+  const { settings, handleToggle, handleSelectChange, handleSaveChanges, resetSettings } = useSettings();
 
   return (
+    
+    <div className="settings-page">
+      {/* Header */}
+      <header className="profile-header">
+        <h1 className="header-logo">
+          <a href="/">
+            <img src="/Icono-the-Revenge-V2.ico" alt="logo" className="logo-img" />
+          THE REVENGE
+          </a>
+        </h1>
+        <div className="header-icons">
+          <span className="header-icon">🔔</span>
+          <span
+            className="header-icon"
+            title="Cerrar sesión"
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
+          >
+            🚪
+          </span>
+        </div>
+      </header>
+      <br />      <br />
+
     <div className="settings-container">
       {/* Configuración de Cuenta */}
       <div className="settings-section">
@@ -214,14 +204,19 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      {/* Botón Guardar */}
+      {/* Botones de Acción */}
       <div className="settings-footer">
+        <button onClick={resetSettings} className="reset-button">
+          Restaurar Valores Predeterminados
+        </button>
         <button onClick={handleSaveChanges} className="save-button">
           <Save size={18} />
           Guardar Cambios
         </button>
       </div>
     </div>
+  </div>
+
   );
 };
 

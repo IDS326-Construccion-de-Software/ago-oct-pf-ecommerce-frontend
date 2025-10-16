@@ -1,40 +1,85 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Persistimos recoveryEmail e isCodeVerified en localStorage
-  const [recoveryEmail, setRecoveryEmail] = useState(() => {
-    return localStorage.getItem("recoveryEmail") || "";
-  });
-  const [isCodeVerified, setIsCodeVerified] = useState(() => {
-    return localStorage.getItem("isCodeVerified") === "true";
-  });
+  const [user, setUser] = useState(null); // 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/users/me", {
+        credentials: "include", // si usas cookies de sesión
+      });
+
+      if (!res.ok) throw new Error("API no disponible o error en respuesta");
+
+      const data = await res.json();
+      setUser(data);
+      setError(null);
+    } catch (err) {
+      console.warn("⚠️ Usando datos mockeados, la API no respondió:", err.message);
+
+      // 👇 Datos mockeados temporales
+      setUser({
+        id: 1,
+        name: "Usuario de prueba",
+        email: "usuario@mock.com",
+        phone: "+1 809-000-0000",
+        location: "Santo Domingo, RD",
+        memberSince: "2024",
+        memberStatus: "Miembro Activo",
+        avatar: "👤",
+      });
+
+      setError(null); 
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    localStorage.setItem("recoveryEmail", recoveryEmail || "");
-  }, [recoveryEmail]);
+    fetchUser();
+  }, []);
 
-  useEffect(() => {
-    localStorage.setItem("isCodeVerified", isCodeVerified ? "true" : "false");
-  }, [isCodeVerified]);
+  // ✅ Cerrar sesión
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("token"); 
+  };
 
-  const resetRecovery = () => {
-    setRecoveryEmail("");
-    setIsCodeVerified(false);
-    localStorage.removeItem("recoveryEmail");
-    localStorage.removeItem("isCodeVerified");
+  const login = async (email, password) => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) throw new Error("Credenciales inválidas");
+
+      const data = await res.json();
+      setUser(data.user);
+      localStorage.setItem("token", data.token); // si el backend devuelve un JWT
+      setError(null);
+      return true;
+    } catch (err) {
+      setError(err.message);
+      return false;
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
-        recoveryEmail,
-        setRecoveryEmail,
-        isCodeVerified,
-        setIsCodeVerified,
-        resetRecovery,
+        user,
+        setUser,
+        loading,
+        error,
+        login,
+        logout,
+        fetchUser,
       }}
     >
       {children}

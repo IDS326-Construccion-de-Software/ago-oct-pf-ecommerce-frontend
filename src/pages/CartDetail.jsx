@@ -2,7 +2,6 @@ import "../styles/CartDetail.css";
 import { useCart } from "../context/CartContext";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { Plus, Minus, X } from "lucide-react";
 import CartItemsList from "../components/CartItemsList";
 
 export default function CartDetail() {
