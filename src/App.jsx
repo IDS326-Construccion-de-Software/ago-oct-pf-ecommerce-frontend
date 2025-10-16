@@ -15,12 +15,12 @@ import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
-<<<<<<< HEAD
+
 import Login from './pages/Login';
-=======
+
 import CartDetail from './pages/CartDetail';
 import Products from './pages/Products';
->>>>>>> origin/dev
+
 
 // new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
