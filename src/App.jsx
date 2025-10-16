@@ -10,11 +10,17 @@ import PromoGrid from "./components/PromoGrid";
 import CategoryCarousel from "./components/CategoryCarousel";
 import ShoppingCart from "./components/ShoppingCart";
 import PaymentModal from './components/PaymentModal';
+import OrderConfirmationModal from './components/OrderConfirmationModal';
 import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
+<<<<<<< HEAD
 import Login from './pages/Login';
+=======
+import CartDetail from './pages/CartDetail';
+import Products from './pages/Products';
+>>>>>>> origin/dev
 
 // new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
@@ -28,7 +34,7 @@ import NewPassword from "./pages/NewPassword";
 // No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
 
 // --- Componente de Presentación (Home Layout) ---
-const AppLayout = ({ promos, products, onAdd, loading }) => (
+const AppLayout = ({ promos, products, onAdd, loading, error }) => (
 
   <div className="min-h-screen flex flex-col">
     <Header />
@@ -39,6 +45,8 @@ const AppLayout = ({ promos, products, onAdd, loading }) => (
       <div className="container" style={{ paddingBottom: "32px" }}>
         {loading ? (
           <div className="text-center py-8">Cargando productos...</div>
+        ) : error ? (
+          <div className="text-center py-8 text-red-500">{error}</div>
         ) : (
           <ProductCarousel
             title="Disfruta de nuestra selección"
@@ -64,15 +72,18 @@ const AppContainer = () => {
   const { addToCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await getAllProducts(1, 20);
         setProducts(response.items);
-      } catch (error) {
-        console.error('Error cargando productos:', error);
+      } catch (err) {
+        console.error('Error cargando productos:', err);
+        setError('No se pudieron cargar los productos. Intente de nuevo más tarde.');
         setProducts([]);
       } finally {
         setLoading(false);
@@ -93,6 +104,7 @@ const AppContainer = () => {
       products={products}
       onAdd={addToCart}
       loading={loading}
+      error={error}
     />
   );
 };
@@ -128,8 +140,15 @@ const ProductDetailPage = () => {
 
 // --- Componente Wrapper con Carrito Global ---
 const GlobalCartWrapper = ({ children }) => {
-  const { cartItems, setIsCartOpen } = useContext(CartContext);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const { 
+    cartItems, 
+    setIsCartOpen, 
+    isPaymentModalOpen, 
+    setIsPaymentModalOpen,
+    isConfirmationModalOpen,
+    setIsConfirmationModalOpen,
+    latestOrder
+  } = useContext(CartContext);
 
   const cartTotal = (cartItems || []).reduce(
     (total, item) => total + (item.price * (item.quantity || 1)), 
@@ -153,6 +172,11 @@ const GlobalCartWrapper = ({ children }) => {
         cartItems={cartItems || []} 
         total={cartTotal} 
       />
+      <OrderConfirmationModal 
+        isOpen={isConfirmationModalOpen}
+        onClose={() => setIsConfirmationModalOpen(false)}
+        order={latestOrder}
+      />
     </>
   );
 };
@@ -169,6 +193,8 @@ export default function App() {
             <Route path="/" element={<AppContainer />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/producto/:id" element={<ProductDetailPage />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/cartDetail" element={<CartDetail />} />
             {/* Password recovery routes */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/recover/code" element={<VerifyCode />} />
