@@ -3,7 +3,7 @@
 // VERSIÓN COMPLETA: Se añade la función getRelatedProducts.
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api"
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK === "true" || !import.meta.env.VITE_API_URL
+const USE_MOCK_DATA = true // Forzamos el uso de datos mock para depuración
 
 // ============= MOCK DATA (Alineado con el DbContext y formato de API) =============
 

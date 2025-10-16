@@ -6,7 +6,7 @@ import { Plus, Minus, X } from "lucide-react";
 import CartItemsList from "../components/CartItemsList";
 
 export default function CartDetail() {
-  const { cartItems } = useCart();
+  const { cartItems, setIsPaymentModalOpen } = useCart();
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + Number(item.price) * item.quantity,
@@ -14,6 +14,10 @@ export default function CartDetail() {
   );
   const taxes = subtotal * 0.18; 
   const total = subtotal + taxes;
+
+  const handleProceedToPayment = () => {
+    setIsPaymentModalOpen(true);
+  };
 
   return (
     <div>
@@ -67,7 +71,7 @@ export default function CartDetail() {
                 <span>${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
               </div>
 
-              <button className="checkout-btn">Proceder al pago</button>
+              <button className="checkout-btn" onClick={handleProceedToPayment}>Proceder al pago</button>
             </div>
         </div>
       </div>
