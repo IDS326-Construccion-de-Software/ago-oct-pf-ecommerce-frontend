@@ -26,16 +26,43 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("recoveryEmail");
     localStorage.removeItem("isCodeVerified");
   };
+ // Estructura sugerida: { id, email, name, token, ... } | null
+  const [user, setUser] = useState(() => {
+    try {
+      const raw = localStorage.getItem("auth:user");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Persistir / limpiar sesión
+  useEffect(() => {
+    if (user) localStorage.setItem("auth:user", JSON.stringify(user));
+    else localStorage.removeItem("auth:user");
+  }, [user]);
+
+  // API de sesión
+  const login = (payload) => setUser(payload);
+  const logout = () => setUser(null);
 
   return (
     <AuthContext.Provider
       value={{
+        // Recovery (lo tuyo)
         recoveryEmail,
         setRecoveryEmail,
         isCodeVerified,
         setIsCodeVerified,
         resetRecovery,
+        // Sesión (login)
+        user,
+        isAuthenticated: !!user,
+        login,
+        logout,
       }}
+
+  
     >
       {children}
     </AuthContext.Provider>

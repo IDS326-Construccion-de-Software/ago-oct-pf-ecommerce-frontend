@@ -15,8 +15,12 @@ import OrdersManager from './components/OrdersManager';
 import { ProductDetail } from './components/ProductDetail';
 import { getAllProducts } from "./services/productService";
 import { categoriesMock } from "./mocks/categories";
+
+import Login from './pages/Login';
+
 import CartDetail from './pages/CartDetail';
 import Products from './pages/Products';
+
 
 // new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
@@ -181,6 +185,8 @@ const GlobalCartWrapper = ({ children }) => {
 export default function App() {
   return (
     <CartProvider>
+
+
       <OrdersProvider>
         <GlobalCartWrapper>
           <Routes>
@@ -193,9 +199,11 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/recover/code" element={<VerifyCode />} />
             <Route path="/new-password" element={<NewPassword />} />
+             <Route path="/login" element={<Login />} />
           </Routes>
         </GlobalCartWrapper>
       </OrdersProvider>
+
     </CartProvider>
   );
 }
