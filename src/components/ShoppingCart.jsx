@@ -22,8 +22,8 @@ export default function ShoppingCart({ onCheckout }) {
   } = useCart();
 
   const [showInstantPay, setShowInstantPay] = useState(false);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false); // <-- nuevo estado
 
-  // Efecto para cerrar el carrito al hacer clic fuera
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (isCartOpen && !e.target.closest(".shopping-cart")) {
@@ -34,14 +34,16 @@ export default function ShoppingCart({ onCheckout }) {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [isCartOpen, setIsCartOpen]);
 
-  // Lógica para confirmar el pago instantáneo
   const handleConfirmPay = () => {
     setShowInstantPay(false);
-    if (onCheckout) {
-      onCheckout(); 
-    }
+    if (onCheckout) onCheckout(); 
     clearCart();
     setIsCartOpen(false);
+  };
+
+  const handleClearCart = () => {
+    clearCart();
+    setIsClearModalOpen(false);
   };
 
   const total = (cartItems || []).reduce(
@@ -56,7 +58,7 @@ export default function ShoppingCart({ onCheckout }) {
           <button className="close-btn" onClick={() => setIsCartOpen(false)}>
             <X size={20} />
           </button>
-          <button className="clear-btn" onClick={clearCart}>
+          <button className="clear-btn" onClick={() => setIsClearModalOpen(true)}>
             Vaciar Carrito
           </button>
         </div>
@@ -91,11 +93,20 @@ export default function ShoppingCart({ onCheckout }) {
               </div>
             </div>
 
+            {/* Modal pago instantáneo */}
             <Modal
               message="¿Seguro que quieres pagar al instante?"
               isOpen={showInstantPay}
               onClose={() => setShowInstantPay(false)}
               onConfirm={handleConfirmPay}
+            />
+
+            {/* Modal vaciar carrito */}
+            <Modal
+              message="¿Seguro que quieres vaciar todo el carrito?"
+              isOpen={isClearModalOpen}
+              onClose={() => setIsClearModalOpen(false)}
+              onConfirm={handleClearCart}
             />
           </>
         )}
