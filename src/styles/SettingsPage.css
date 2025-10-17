@@ -1,0 +1,282 @@
+/* SettingsPage.css */
+/* General Styles */
+.user-profile-container {
+  background-color: #d4b5a0;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  padding-top: 55px;
+}
+.settings-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Settings Section */
+.settings-section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* Settings Item */
+.settings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background-color 0.2s ease;
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.settings-item:hover {
+  background-color: #fafafa;
+}
+
+.settings-item.danger {
+  background-color: #fff5f5;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 6px;
+}
+
+.item-description {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+/* Action Buttons */
+.action-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.action-button.primary {
+  background-color: #ff6633;
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 102, 51, 0.15);
+}
+
+.action-button.primary:hover {
+  background-color: #e55a2b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 102, 51, 0.25);
+}
+
+.action-button.danger {
+  background-color: #fee;
+  color: #ff6633;
+  border: 1px solid #ffcccc;
+}
+
+.action-button.danger:hover {
+  background-color: #fdd;
+  border-color: #ffb3b3;
+}
+
+/* Toggle Switch */
+.toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  width: 50px;
+  height: 28px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: all 0.3s ease;
+  border-radius: 14px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle input:checked + .toggle-slider {
+  background-color: #ff6633;
+}
+
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+}
+
+/* Select Group */
+.settings-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.select-item {
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.select-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.select-input {
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6633' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+  padding-right: 36px;
+}
+
+.select-input:hover {
+  border-color: #ff6633;
+  box-shadow: 0 2px 8px rgba(255, 102, 51, 0.1);
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: #ff6633;
+  box-shadow: 0 0 0 3px rgba(255, 102, 51, 0.1);
+}
+
+/* Settings Footer */
+.settings-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0;
+  gap: 12px;
+}
+
+.save-button {
+  background-color: #ff6633;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(255, 102, 51, 0.2);
+}
+
+.save-button:hover {
+  background-color: #e55a2b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 102, 51, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 15px;
+  }
+
+  .settings-section {
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .settings-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .settings-group {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .toggle {
+    align-self: flex-end;
+  }
+
+  .action-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .settings-footer {
+    justify-content: center;
+  }
+
+  .save-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
