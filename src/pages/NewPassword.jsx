@@ -1,4 +1,4 @@
-// src/pages/NewPassword.jsx
+import SuccessModal from "../components/SuccessModal"; // importamos el modal
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -13,15 +13,12 @@ export default function NewPassword() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [msg, setMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
+  const [isModalOpen, setIsModalOpen] = useState(false); // <-- control del modal
 
   useEffect(() => {
     if (!isCodeVerified) {
-      // si no se verificó el código, regresa al paso inicial
       navigate("/forgot-password");
     }
-    // eslint-disable-next-line
   }, [isCodeVerified]);
 
   const handleSubmit = (e) => {
@@ -34,10 +31,14 @@ export default function NewPassword() {
       setMsg("Las contraseñas no coinciden.");
       return;
     }
-    // Simula actualización exitosa
-    setSuccessMsg("¡Contraseña actualizada exitosamente!"); // <-- 2. Actualiza el mensaje de éxito
-    setMsg(""); // Oculta el mensaje de error si todo salió bien
-    // ...aquí podrías limpiar los campos o redirigir...
+    // Abrimos el modal en lugar de mensaje de éxito
+    setMsg("");
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    navigate("/login"); // redirige automáticamente al login al cerrar el modal
   };
 
   return (
@@ -45,41 +46,46 @@ export default function NewPassword() {
       <div className="np-card">
         <img src={logo} alt="logo" className="np-logo" />
         <h2 className="np-title">Nueva contraseña</h2>
-        <p className="np-text">Introduce tu nueva contraseña, tiene que contener al menos 6 caracteres</p>
+        <p className="np-text">
+          Introduce tu nueva contraseña, tiene que contener al menos 6 caracteres
+        </p>
 
-       
+        <form onSubmit={handleSubmit} className="np-form">
+          <div className="np-input-wrapper">
+            <input
+              type="password"
+              placeholder="Nueva contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="np-input"
+            />
+            <img src={unlockIcon} alt="unlock icon" className="np-input-icon np-unlock-icon" />
+            <img src={eyeIcon} alt="eye icon" className="np-input-icon np-eye-icon" />
+          </div>
+          <div className="np-input-wrapper">
+            <input
+              type="password"
+              placeholder="Confirmar contraseña"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              className="np-input"
+            />
+            <img src={unlockIcon} alt="unlock icon" className="np-input-icon np-unlock-icon" />
+            <img src={eyeIcon} alt="eye icon" className="np-input-icon np-eye-icon" />
+          </div>
+          {msg && <div className="np-error">{msg}</div>}
 
-<form onSubmit={handleSubmit} className="np-form">
-  <div className="np-input-wrapper">
-    <input
-      type="password"
-      placeholder="Nueva contraseña"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      className="np-input"
-    />
-    <img src={unlockIcon} alt="unlock icon" className="np-input-icon np-unlock-icon" />
-    <img src={eyeIcon} alt="eye icon" className="np-input-icon np-eye-icon" />
-  </div>
-  <div className="np-input-wrapper">
-    <input
-      type="password"
-      placeholder="Confirmar contraseña"
-      value={confirm}
-      onChange={(e) => setConfirm(e.target.value)}
-      className="np-input"
-    />
-    <img src={unlockIcon} alt="unlock icon" className="np-input-icon np-unlock-icon" />
-    <img src={eyeIcon} alt="eye icon" className="np-input-icon np-eye-icon" />
-  </div>
-  {msg && <div className="np-error">{msg}</div>}
-
-  <button type="submit" className="np-btn-primary">Actualizar Contraseña</button>
-  <button type="button" className="np-btn-secondary" onClick={() => navigate(-1)}>Atrás</button>
-  {successMsg && <div className="np-success">{successMsg}</div>} {/* <-- 3. Muestra el mensaje debajo del formulario */}
-</form>
-
+          <button type="submit" className="np-btn-primary">Actualizar Contraseña</button>
+          <button type="button" className="np-btn-secondary" onClick={() => navigate("/forgot-password")}>Atrás</button>
+        </form>
       </div>
+
+      {/* Modal de éxito */}
+      <SuccessModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        message="¡Contraseña actualizada exitosamente!"
+      />
     </div>
   );
 }

@@ -80,7 +80,7 @@ export default function CartDetail() {
               <span>Total:</span>
               <span>${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
             </div>
-            <button className="checkout-btn" onClick={handleProceedToPayment}>
+            <button className="checkout-btn3" onClick={handleProceedToPayment}>
               Proceder al pago
             </button>
           </div>

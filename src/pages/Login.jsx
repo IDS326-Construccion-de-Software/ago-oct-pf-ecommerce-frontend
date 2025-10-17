@@ -1,11 +1,10 @@
-// src/pages/auth/Login.jsx
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
 import '../styles/auth.css'
-import logoUrl from '../assets/LogoTheRevenge.svg' // logo 
-import isEmail from 'validator/lib/isEmail';
+import logoUrl from '../assets/LogoTheRevenge.svg'
+import isEmail from 'validator/lib/isEmail'
 
-/* ===== Iconos ===== */
 function MailIcon(){ return (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
     <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/>
@@ -24,7 +23,6 @@ function EyeIcon(){ return (
     <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5"/>
   </svg>
 )}
-/* Logos sociales */
 function AppleIcon(){ return (
   <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
     <path d="M16.28 13.5c.03 3.09 2.72 4.12 2.75 4.13-.02.06-.43 1.45-1.43 2.87-.86 1.24-1.75 2.47-3.15 2.5-1.39.02-1.84-.81-3.43-.81-1.58 0-2.08.79-3.4.83-1.36.05-2.4-1.34-3.28-2.58C2.4 18.6 1.3 14.2 3.2 11.47c.9-1.33 2.33-2.18 3.95-2.21 1.55-.03 3.02.86 3.81.86.78 0 2.6-1.06 4.39-.91.75.03 2.85.3 4.21 2.27-.11.07-2.47 1.44-2.47 4.02zM13.9 6.7c.75-.91 1.25-2.18 1.11-3.46-1.08.04-2.41.72-3.19 1.63-.7.8-1.3 2.11-1.14 3.35 1.21.09 2.47-.61 3.22-1.52z"/>
@@ -51,21 +49,22 @@ export default function Login(){
   const [remember,setRemember] = useState(false)
   const [error,setError] = useState('')
   const [loading,setLoading] = useState(false)
-  const { login } = useAuth()   // del contexto
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   async function onSubmit(e){
     e.preventDefault()
     setError('')
-    const emailToCheck = email.trim();
-    if (!isEmail(emailToCheck)) return setError('Correo inválido.');
+    const emailToCheck = email.trim()
+    if (!isEmail(emailToCheck)) return setError('Correo inválido.')
     if(!pwd) return setError('Ingrese su contraseña.')
-
-    // TODO: reemplazar por llamada real a tu API
     const fakeUser = { id: 1, email, name: 'User', token: 'demo' }
-    login(fakeUser)    // guarda sesión en contexto + localStorage
-
+    login(fakeUser)
     setLoading(true)
-    setTimeout(()=>setLoading(false), 500)
+    setTimeout(()=>{
+      setLoading(false)
+      navigate('/')
+    }, 500)
   }
 
   return (
@@ -78,7 +77,6 @@ export default function Login(){
         <h2 className="auth-title">Inicia sesión en tu cuenta</h2>
 
         <form onSubmit={onSubmit}>
-          {/* Email */}
           <label className="auth-label">Correo electrónico</label>
           <div className="input-wrap">
             <span className="input-left"><MailIcon/></span>
@@ -92,7 +90,6 @@ export default function Login(){
             />
           </div>
 
-          {/* Password */}
           <label className="auth-label">Contraseña</label>
           <div className="input-wrap">
             <span className="input-left"><LockIcon/></span>
@@ -108,48 +105,46 @@ export default function Login(){
               type="button"
               className="eye-btn input-right"
               onClick={()=>setShowPwd(s=>!s)}
-              aria-label={showPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-              title={showPwd ? 'Ocultar' : 'Mostrar'}
             >
               <EyeIcon/>
             </button>
           </div>
 
-          {/* Recordarme + Olvidaste */}
           <div className="auth-row">
             <label style={{ display:'inline-flex', alignItems:'center', gap:8, fontSize:14 }}>
               <input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)} />
               Recordarme
             </label>
-            <a href="#" className="link-accent">¿Olvidaste tu contraseña?</a>
+            <button
+              type="button"
+              className="link-accent"
+              onClick={() => navigate('/new-password')}
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
           </div>
 
-          {/* Error */}
           {error && <div className="auth-error">{error}</div>}
 
-          {/* Botón principal */}
           <button type="submit" className="btn-primary" disabled={loading}>
             {loading ? 'Ingresando…' : 'Iniciar sesión'}
           </button>
 
-          {/* Separador */}
           <div className="auth-sep">
             <div className="line" />
             <span className="text">O continúa con</span>
             <div className="line" />
           </div>
 
-          {/* Social */}
           <div className="socials" aria-label="Login social">
-            <button type="button" className="btn" title="Apple" aria-label="Apple"><AppleIcon/></button>
-            <button type="button" className="btn" title="Facebook" aria-label="Facebook"><FacebookIcon/></button>
-            <button type="button" className="btn" title="Google" aria-label="Google"><GoogleIcon/></button>
+            <button type="button" className="btn" title="Apple"><AppleIcon/></button>
+            <button type="button" className="btn" title="Facebook"><FacebookIcon/></button>
+            <button type="button" className="btn" title="Google"><GoogleIcon/></button>
           </div>
 
-          {/* Pregunta final */}
           <div className="auth-bottom">
-            <span className="ask">¿No tienes una cuenta? </span>
-            <span className="cta">Regístrate aquí</span>
+            {/* <span className="ask">¿No tienes una cuenta? </span>
+            <span className="cta">Regístrate aquí</span> */}
           </div>
         </form>
       </div>
