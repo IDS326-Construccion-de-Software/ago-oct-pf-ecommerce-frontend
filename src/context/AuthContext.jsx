@@ -41,46 +41,52 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    localStorage.setItem("isCodeVerified", isCodeVerified ? "true" : "false");
+  }, [isCodeVerified]);
 
-  // ✅ Cerrar sesión
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("token"); 
+  const resetRecovery = () => {
+    setRecoveryEmail("");
+    setIsCodeVerified(false);
+    localStorage.removeItem("recoveryEmail");
+    localStorage.removeItem("isCodeVerified");
   };
-
-  const login = async (email, password) => {
+ // Estructura sugerida: { id, email, name, token, ... } | null
+  const [user, setUser] = useState(() => {
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) throw new Error("Credenciales inválidas");
-
-      const data = await res.json();
-      setUser(data.user);
-      localStorage.setItem("token", data.token); // si el backend devuelve un JWT
-      setError(null);
-      return true;
-    } catch (err) {
-      setError(err.message);
-      return false;
+      const raw = localStorage.getItem("auth:user");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
     }
-  };
+  });
+
+  // Persistir / limpiar sesión
+  useEffect(() => {
+    if (user) localStorage.setItem("auth:user", JSON.stringify(user));
+    else localStorage.removeItem("auth:user");
+  }, [user]);
+
+  // API de sesión
+  const login = (payload) => setUser(payload);
+  const logout = () => setUser(null);
 
   return (
     <AuthContext.Provider
       value={{
+        // Recovery (lo tuyo)
+        recoveryEmail,
+        setRecoveryEmail,
+        isCodeVerified,
+        setIsCodeVerified,
+        resetRecovery,
+        // Sesión (login)
         user,
-        setUser,
-        loading,
-        error,
+        isAuthenticated: !!user,
         login,
         logout,
-        fetchUser,
       }}
+
+  
     >
       {children}
     </AuthContext.Provider>

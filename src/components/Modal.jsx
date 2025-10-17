@@ -8,8 +8,8 @@ export default function Modal({ message, isOpen, onClose, onConfirm }) {
   return createPortal(
     <div className="modal-overlay">
       <div className="modal-content">
-        <p>{message}</p>
-        <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "16px" }}>
+        <p className="modal-message">{message}</p>
+        <div className="modal-actions">
           {onConfirm && <button className="modal-btn confirm" onClick={onConfirm}>Confirmar</button>}
           {onClose && <button className="modal-btn close" onClick={onClose}>Cancelar</button>}
         </div>

@@ -6,6 +6,8 @@
   margin: 40px auto;
   gap: 40px;
   align-items: flex-start;
+  /* Altura máxima para activar scroll interno solo en el lado izquierdo */
+  max-height: 85vh;
 }
 
 /* ===== SECCIÓN IZQUIERDA 70% ===== */
@@ -14,6 +16,28 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
+  overflow-y: auto; /* Solo el lado izquierdo tiene scroll */
+  max-height: 85vh; /* Limita altura del contenedor izquierdo */
+  padding-right: 10px; /* Espacio para evitar que el scroll tape contenido */
+}
+
+/* Scrollbar personalizada solo para el lado izquierdo */
+.left-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.left-section::-webkit-scrollbar-track {
+  background: rgba(236, 100, 38, 0.05);
+  border-radius: 10px;
+}
+
+.left-section::-webkit-scrollbar-thumb {
+  background: rgba(236, 100, 38, 0.3);
+  border-radius: 10px;
+}
+
+.left-section::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 100, 38, 0.5);
 }
 
 /* --- Caja de criterios --- */
@@ -31,25 +55,49 @@
   text-align: left;
 }
 
+/* 🔸 Distribución y diseño visual de las opciones */
 .criteria-options {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px 25px;
 }
 
+/* 🔸 Cada opción con contorno y efecto visual */
 .criteria-options label {
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: flex-start;
   font-weight: 600;
   color: #632713;
   cursor: pointer;
+  padding: 10px 14px;
+  border: 2px solid rgba(236, 100, 38, 0.25);
+  border-radius: 12px;
+  background: #fff;
+  transition: all 0.25s ease;
 }
 
+/* Hover y opción seleccionada */
+.criteria-options label:hover {
+  border-color: #EC6426;
+  background: #FFF5EC;
+  box-shadow: 0 2px 8px rgba(236, 100, 38, 0.2);
+}
+
+/* Si el input está seleccionado, cambia el borde del label */
+.criteria-options input[type="radio"]:checked + span {
+  font-weight: 700;
+  color: #EC6426;
+}
+
+/* 🔸 Radio button con color de acento */
 .criteria-options input[type="radio"] {
-  accent-color: #EC6426; /* Color del radio button */
+  accent-color: #EC6426;
   width: 18px;
   height: 18px;
 }
+
 
 /* --- Caja de productos --- */
 .items-box {
@@ -57,16 +105,41 @@
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(99, 39, 19, 0.08);
-  max-height: 600px;
-  overflow-y: auto;
+}
+/* Si quieres destacar el nombre del producto */
+.items-box .item-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #632713;
 }
 
+/* Si quieres resaltar el precio */
+.items-box .item-price {
+  font-size: 1rem;
+  color: #EC6426;
+  font-weight: 700;
+}
 .items-box h3 {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   margin-bottom: 15px;
   color: #632713;
   border-bottom: 1px solid rgba(236, 100, 38, 0.2);
   padding-bottom: 8px;
+}
+
+/* ===== AJUSTE: imágenes de productos más grandes solo dentro del carrito ===== */
+.items-box img {
+  width: 15%;                /* Aumenta el tamaño visible */
+  height: 15%;
+  transform: scale(1.15);     /* Zoom suave sin romper layout */
+  transition: transform 0.3s ease;
+  border-radius: 12px;        /* Mantén bordes suaves */
+  margin-right: 15px;      /* Espacio entre imagen y texto */
+}
+
+/* 🔸 Efecto visual al pasar el mouse */
+.items-box img:hover {
+  transform: scale(1.2);
 }
 
 /* ===== SECCIÓN DERECHA 30% ===== */
@@ -75,6 +148,9 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
+  position: sticky; /* Fijo al hacer scroll */
+  top: 20px; /* Se mantiene a 20px del borde superior */
+  align-self: flex-start;
 }
 
 /* --- Caja de cupón --- */
@@ -136,23 +212,23 @@
   border-top: 1px solid rgba(236, 100, 38, 0.2);
 }
 
-/* Nueva clase para alinear texto a la izquierda y montos a la derecha */
+/* Línea de resumen */
 .summary-line {
   display: flex;
-  justify-content: space-between; /* separa texto y valor */
+  justify-content: space-between;
   align-items: center;
   font-size: 1rem;
   color: #632713;
   margin: 8px 0;
 }
 
-/* Estilo del total */
 .summary-line.total {
   font-weight: 700;
   font-size: 1.2rem;
   color: #EC6426;
   border-top: 2px solid rgba(236, 100, 38, 0.2);
   padding-top: 10px;
+  margin-top: 50px;
 }
 
 .checkout-btn {
@@ -174,35 +250,22 @@
   box-shadow: 0 6px 20px rgba(236, 100, 38, 0.3);
 }
 
-/* ===== SCROLL Y PRODUCTOS ===== */
-.items-box::-webkit-scrollbar {
-  width: 8px;
-}
-
-.items-box::-webkit-scrollbar-track {
-  background: rgba(236, 100, 38, 0.05);
-  border-radius: 10px;
-}
-
-.items-box::-webkit-scrollbar-thumb {
-  background: rgba(236, 100, 38, 0.3);
-  border-radius: 10px;
-}
-
-.items-box::-webkit-scrollbar-thumb:hover {
-  background: rgba(236, 100, 38, 0.5);
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .cart-detail-container {
     flex-direction: column;
     width: 90%;
+    max-height: none;
   }
 
-  .left-section,
+  .left-section {
+    overflow: visible;
+    max-height: none;
+  }
+
   .right-section {
-    flex: 1 1 100%;
+    position: relative;
+    top: 0;
   }
 }
 
@@ -213,4 +276,27 @@
   .items-box {
     padding: 15px;
   }
+
+  .criteria-options {
+    grid-template-columns: 1fr 1fr; /* Se reparten en 2 columnas en pantallas pequeñas */
+  }
+}
+.clear-cart-btn {
+  width: 20%;
+  margin-top: 15px;
+  background: #EC6426;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.clear-cart-btn:hover {
+  background: #D95420;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 100, 38, 0.4);
 }
