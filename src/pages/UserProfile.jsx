@@ -15,15 +15,17 @@ const UserProfile = () => {
   // 🔹 Menú lateral
   const menuItems = [
     { id: "profile", label: "Perfil", icon: "👤" },
-    { id: "orders", label: "Pedidos", icon: "📦" },
+    { id: "orders", label: "Mis pedidos", icon: "📦" },
     { id: 'settings', label: 'Configuración', icon: '⚙️' },
     { id: "security", label: "Seguridad", icon: "🔒" },
     { id: "notifications", label: "Notificaciones", icon: "🔔" },
   ];
 
   const handleMenuClick = (tabId) => {
-    if (tabId === 'settings') {
-      navigate('/settings');
+    if (tabId === "settings") {
+      navigate("/settings");
+    } else if (tabId === "orders") {
+      navigate("/orders");
     } else {
       setActiveTab(tabId);
     }
@@ -196,34 +198,6 @@ const UserProfile = () => {
                   <div className="info-value">{user.memberSince}</div>
                 </div>
               </div>
-            </section>
-          )}
-
-          {/* Orders */}
-          {activeTab === "orders" && (
-            <section className="section">
-              <h3 className="section-title">Pedidos Recientes</h3>
-              {orders.map((order, idx) => (
-                <div key={idx} className="order-item">
-                  <div className="order-left">
-                    <div className="order-name">{order.name}</div>
-                    <div className="order-id">{order.id}</div>
-                  </div>
-                  <div className="order-right">
-                    <div className="order-price">
-                      RD$
-                      {order.price.toLocaleString("es-DO", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </div>
-                    <div className="order-date">{order.date}</div>
-                    <span className={`order-status ${getStatusClass(order.status)}`}>
-                      {order.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
             </section>
           )}
 

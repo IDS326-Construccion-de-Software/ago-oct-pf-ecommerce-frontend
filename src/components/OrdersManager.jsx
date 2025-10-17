@@ -115,7 +115,6 @@ export default function OrdersManager() {
             {loading && orders.length === 0 ? (
               <div className="orders-loading">
                 <div className="loading-spinner"></div>
-                <p>Cargando pedidos...</p>
               </div>
             ) : (
               <>

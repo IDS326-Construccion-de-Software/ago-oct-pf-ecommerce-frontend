@@ -22,21 +22,16 @@ import CartDetail from './pages/CartDetail';
 import Products from './pages/Products';
 import SettingsPage from './pages/SettingsPage';
 
-// new Importaciones para tus pantallas de recuperación de contraseña
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyCode from "./pages/VerifyCode";
 import NewPassword from "./pages/NewPassword";
-import { SettingsProvider } from './context/SettingContext';
+import { SettingsProvider } from './context/SettingsContext';
 import UserProfile from './pages/UserProfile';
 import { AuthProvider } from './context/AuthContext';
 
+import OrderConfirmation from './pages/OrderConfirmation';
 
-// --- Componentes Separados para una Arquitectura Limpia ---
 
-// 1. Componente de Presentación (Layout)
-// No tiene lógica de estado ni de contexto. Solo recibe props y renderiza UI.
-
-// --- Componente de Presentación (Home Layout) ---
 const AppLayout = ({ promos, products, onAdd, loading, error }) => (
 
   <div className="min-h-screen flex flex-col">
@@ -70,7 +65,6 @@ const AppLayout = ({ promos, products, onAdd, loading, error }) => (
   </div>
 );
 
-// --- Componente Contenedor Home ---
 const AppContainer = () => {
   const { addToCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
@@ -204,6 +198,9 @@ export default function App() {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/recover/code" element={<VerifyCode />} />
                 <Route path="/new-password" element={<NewPassword />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
+
               </Routes>
             </GlobalCartWrapper>
           </OrdersProvider>

@@ -148,7 +148,7 @@ export function ProductDetail({ productId, onAddToCart }) {
   if (loading) {
     return (
       <div className="product-loading">
-        <div className="loading-spinner">Cargando producto...</div>
+        <div className="loading-spinner"></div>
       </div>
     )
   }

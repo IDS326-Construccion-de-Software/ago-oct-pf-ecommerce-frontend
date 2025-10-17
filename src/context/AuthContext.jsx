@@ -7,7 +7,6 @@ export function AuthProvider({ children }) {
   const [error, setError] = useState(null);
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [isCodeVerified, setIsCodeVerified] = useState(false);
-
   const [user, setUser] = useState(() => {
     try {
       const raw = localStorage.getItem("auth:user");
@@ -16,6 +15,10 @@ export function AuthProvider({ children }) {
       return null;
     }
   });
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     if (user) localStorage.setItem("auth:user", JSON.stringify(user));
@@ -36,17 +39,12 @@ export function AuthProvider({ children }) {
   const fetchUser = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/users/me", {
-        credentials: "include",
-      });
-
+      const res = await fetch("/api/users/me", { credentials: "include" });
       if (!res.ok) throw new Error("API no disponible o error en respuesta");
-
       const data = await res.json();
       setUser(data);
       setError(null);
-    } catch (err) {
-      console.warn("⚠️ Usando datos mockeados, la API no respondió:", err.message);
+    } catch {
       setUser({
         id: 1,
         name: "Usuario de prueba",

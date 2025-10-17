@@ -42,7 +42,6 @@ export const SettingsProvider = ({ children }) => {
 
   const handleSaveChanges = () => {
     console.log('Cambios guardados:', settings);
-    alert('Cambios guardados exitosamente');
   };
 
   const resetSettings = () => {
@@ -59,7 +58,6 @@ export const SettingsProvider = ({ children }) => {
       publicProfile: false,
       shareUsageData: false
     });
-    alert('Configuración restaurada');
   };
 
   const value = {

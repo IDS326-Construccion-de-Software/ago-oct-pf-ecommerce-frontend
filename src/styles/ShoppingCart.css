@@ -1,64 +1,99 @@
-/* Fondo semitransparente con animación */
+:root {
+  /* Colores */
+  --primary: #EC6426;
+  --primary-dark: #D95420;
+  --secondary: #632713;
+  --bg-light: #FFF5EC;
+  --bg-gradient-start: #FFF5EC;
+  --bg-gradient-end: #FDE3CF;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(99, 39, 19, 0.12);
+  --shadow-strong: rgba(236, 100, 38, 0.3);
+  --border-light: rgba(99, 39, 19, 0.1);
+  --border-highlight: rgba(236, 100, 38, 0.2);
+  --scroll-thumb: rgba(236, 100, 38, 0.3);
+  --scroll-thumb-hover: rgba(236, 100, 38, 0.5);
+
+  /* Tamaños */
+  --cart-width: 450px;
+  --cart-padding: 32px 28px;
+  --cart-radius: 20px 0 0 20px;
+  --item-gap: 14px;
+  --item-image-size: 80px;
+  --button-radius: 12px;
+  --button-height: 52px;
+  --animation-speed: 0.3s;
+  --ripple-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ======================================
+   Overlay del carrito
+====================================== */
 .cart-overlay {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba(0,0,0,0);
+  background: rgba(0, 0, 0, 0);
   opacity: 0;
   visibility: hidden;
   z-index: 2000;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity var(--animation-speed) ease, visibility var(--animation-speed) ease;
   backdrop-filter: blur(0px);
   display: flex;
-  justify-content: flex-end; /* MODIFICADO: Alinea el contenido (el carrito) a la derecha */
+  justify-content: flex-end;
 }
 
 .cart-overlay.open {
   opacity: 1;
   visibility: visible;
-  background: rgba(0,0,0,0.5);
+  background: var(--overlay-bg);
   backdrop-filter: blur(4px);
 }
 
-/* Panel del carrito lateral (antes flotante) */
+/* ======================================
+   Panel lateral del carrito
+====================================== */
 .shopping-cart {
-  width: 450px; /* MODIFICADO: Ancho del panel lateral */
-  max-width: 90vw; /* MODIFICADO: Límite para pantallas más pequeñas */
-  height: 100%; /* MODIFICADO: Ocupa toda la altura */
-  background: linear-gradient(135deg, #FFF5EC 0%, #FDE3CF 100%);
-  padding: 32px 28px;
-  box-shadow: -10px 0 40px rgba(99, 39, 19, 0.25); /* MODIFICADO: Sombra a la izquierda */
-  border-radius: 20px 0 0 20px; /* MODIFICADO: Solo redondea las esquinas izquierdas */
-  transform: translateX(100%); /* MODIFICADO: Posición inicial fuera de la pantalla a la derecha */
-  opacity: 1; /* MODIFICADO: Opacidad siempre en 1, la visibilidad la controla el overlay */
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* MODIFICADO: Transición solo para el deslizamiento */
+  width: var(--cart-width);
+  max-width: 90vw;
+  height: 100%;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  padding: var(--cart-padding);
+  box-shadow: -10px 0 40px var(--shadow-strong);
+  border-radius: var(--cart-radius);
+  transform: translateX(100%);
+  opacity: 1;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  border-right: none; /* NUEVO: Quitamos el borde derecho ya que está "pegado" al borde de la pantalla */
+  border-right: none;
 }
 
 .cart-overlay.open .shopping-cart {
-  transform: translateX(0); /* MODIFICADO: Posición final visible en pantalla */
+  transform: translateX(0);
 }
 
-/* Encabezado del carrito */
+/* ======================================
+   Encabezado
+====================================== */
 .cart-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 2px solid rgba(99, 39, 19, 0.1);
+  border-bottom: 2px solid var(--border-light);
 }
 
 .close-btn {
   background: white;
   border: 1px solid rgba(99, 39, 19, 0.2);
-  color: #632713;
+  color: var(--secondary);
   padding: 10px;
   border-radius: 10px;
   display: flex;
@@ -66,18 +101,18 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px var(--shadow-light);
 }
 
 .close-btn:hover {
-  background: #632713;
+  background: var(--secondary);
   color: white;
   transform: scale(1.1) rotate(90deg);
-  box-shadow: 0 4px 8px rgba(99, 39, 19, 0.2);
+  box-shadow: 0 4px 8px var(--shadow-medium);
 }
 
 .clear-btn {
-  background: linear-gradient(135deg, #EC6426 0%, #D95420 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   border: none;
   color: white;
   padding: 10px 18px;
@@ -86,48 +121,40 @@
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(236, 100, 38, 0.3);
+  box-shadow: 0 2px 8px var(--shadow-strong);
 }
 
 .clear-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(236, 100, 38, 0.4);
+  box-shadow: 0 4px 12px var(--shadow-strong);
 }
 
-/* Título con animación */
+/* ======================================
+   Título
+====================================== */
 .shopping-cart h2 {
   text-align: center;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 24px;
-  color: #632713;
+  color: var(--secondary);
   letter-spacing: -0.5px;
   animation: slideInFromTop 0.5s ease-out;
 }
 
-@keyframes slideInFromTop {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Lista de productos con scroll personalizado */
+/* ======================================
+   Lista de productos
+====================================== */
 .cart-items {
   flex: 1;
   overflow-y: auto;
   margin-top: 8px;
   list-style: none;
-  padding: 0 8px 0 0;
+  padding-left: 0;
+  padding-right: 8px;
   min-height: 200px;
-  /* max-height no es necesario ya que el contenedor es flexible */
 }
 
-/* Scroll personalizado */
 .cart-items::-webkit-scrollbar {
   width: 8px;
 }
@@ -138,64 +165,47 @@
 }
 
 .cart-items::-webkit-scrollbar-thumb {
-  background: rgba(236, 100, 38, 0.3);
+  background: var(--scroll-thumb);
   border-radius: 10px;
   transition: background 0.2s ease;
 }
 
 .cart-items::-webkit-scrollbar-thumb:hover {
-  background: rgba(236, 100, 38, 0.5);
+  background: var(--scroll-thumb-hover);
 }
 
-/* Cada item como tarjeta con animación */
+/* ======================================
+   Item
+====================================== */
 .cart-item-card {
   background: white;
-  border: 1px solid rgba(99, 39, 19, 0.1);
+  border: 1px solid var(--border-light);
   border-radius: 14px;
   padding: 14px;
-  margin-bottom: 14px;
+  margin-bottom: var(--item-gap);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  gap: var(--item-gap);
+  box-shadow: 0 2px 8px var(--shadow-light);
   transition: all 0.3s ease;
   animation: slideInFromRight 0.4s ease-out backwards;
 }
 
-.cart-item-card:nth-child(1) { animation-delay: 0.1s; }
-.cart-item-card:nth-child(2) { animation-delay: 0.15s; }
-.cart-item-card:nth-child(3) { animation-delay: 0.2s; }
-.cart-item-card:nth-child(4) { animation-delay: 0.25s; }
-.cart-item-card:nth-child(5) { animation-delay: 0.3s; }
-.cart-item-card:nth-child(n+6) { animation-delay: 0.35s; }
-
-@keyframes slideInFromRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 .cart-item-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(99, 39, 19, 0.12);
+  box-shadow: 0 6px 20px var(--shadow-medium);
 }
 
-/* Imagen del producto - VISIBLE Y DESTACADA */
 .cart-item-image {
-  width: 80px;
-  height: 80px;
-  min-width: 80px;
+  width: var(--item-image-size);
+  height: var(--item-image-size);
+  min-width: var(--item-image-size);
   object-fit: cover;
   border-radius: 10px;
   border: 2px solid rgba(236, 100, 38, 0.15);
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   background: #f5f5f5;
 }
 
@@ -221,25 +231,24 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
   -webkit-box-orient: vertical;
-  box-orient: vertical;
 }
 
 .item-price {
-  color: #EC6426;
+  color: var(--primary);
   font-size: 0.9rem;
   font-weight: 600;
 }
 
-/* Contenedor de acciones de cada item */
+/* ======================================
+   Botones y acciones
+====================================== */
 .item-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Botones + y - verticales mejorados */
 .quantity-controls {
   display: flex;
   flex-direction: column;
@@ -254,15 +263,15 @@
   background: white;
   border-radius: 6px;
   padding: 6px 10px;
-  cursor: pointer;
   margin: 2px 0;
+  cursor: pointer;
   transition: all 0.2s ease;
-  color: #EC6426;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  color: var(--primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .quantity-controls button:hover {
-  background: #EC6426;
+  background: var(--primary);
   color: white;
   transform: scale(1.15);
 }
@@ -276,16 +285,15 @@
   min-width: 28px;
   text-align: center;
   font-weight: 700;
-  color: #632713;
+  color: var(--secondary);
   padding: 6px 0;
   font-size: 1rem;
 }
 
-/* Botón eliminar mejorado */
 .remove-btn {
   background: rgba(236, 100, 38, 0.1);
   border: none;
-  color: #EC6426;
+  color: var(--primary);
   cursor: pointer;
   padding: 8px;
   border-radius: 8px;
@@ -296,99 +304,83 @@
 }
 
 .remove-btn:hover {
-  background: #EC6426;
+  background: var(--primary);
   color: white;
   transform: rotate(180deg) scale(1.15);
 }
 
-/* Mensaje vacío mejorado */
-.empty-cart-message {
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.15rem;
-  margin-top: 80px;
-  margin-bottom: 80px;
-  color: #632713;
-  opacity: 0.7;
-  line-height: 1.8;
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 0.7;
-    transform: translateY(0);
-  }
-}
-
-/* Pie del carrito */
+/* ======================================
+   Footer y total
+====================================== */
 .cart-footer {
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 2px solid rgba(99, 39, 19, 0.1);
+  border-top: 2px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
   animation: slideInFromBottom 0.5s ease-out;
 }
 
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Total mejorado */
 .cart-total {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 16px 0;
+  margin: 0;
   padding: 18px;
   background: white;
-  border: 2px solid rgba(236, 100, 38, 0.2);
+  border: 2px solid var(--border-highlight);
   border-radius: 14px;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #632713;
-  box-shadow: 0 2px 8px rgba(236, 100, 38, 0.1);
+  color: var(--secondary);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
 .cart-total strong {
-  color: #EC6426;
+  color: var(--primary);
   font-size: 1.4rem;
 }
 
-/* Acciones mejoradas */
+/* ======================================
+   Checkout buttons
+====================================== */
+/* Contenedor de los botones de checkout */
 .cart-actions {
   display: flex;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 0;
+  align-items: stretch; /* Alinea altura de los botones */
 }
 
-.checkout-btn, .checkout-btn2 {
-  flex: 1;
-  background: linear-gradient(135deg, #EC6426 0%, #D95420 100%);
+/* Botones de checkout */
+.checkout-btn,
+.checkout-btn2 {
+  flex: 1; /* Ambos ocupan el mismo ancho */
+  height: var(--button-height); /* Misma altura */
+  box-sizing: border-box; /* Padding y border no rompen la altura */
+  border-radius: var(--button-radius);
   border: none;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: white;
   font-weight: 700;
-  cursor: pointer;
   font-size: 1rem;
-  padding: 16px 20px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(236, 100, 38, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px var(--shadow-strong);
+  transition: all 0.3s ease;
 }
 
-.checkout-btn::before, .checkout-btn2::before {
+/* Efecto hover con ripple */
+.checkout-btn::before,
+.checkout-btn2::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -396,30 +388,59 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--ripple-color);
   transform: translate(-50%, -50%);
   transition: width 0.6s, height 0.6s;
 }
 
-.checkout-btn:hover::before, .checkout-btn2:hover::before {
+.checkout-btn:hover::before,
+.checkout-btn2:hover::before {
   width: 300px;
   height: 300px;
 }
 
-.checkout-btn:hover, .checkout-btn2:hover {
+.checkout-btn:hover,
+.checkout-btn2:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(236, 100, 38, 0.4);
 }
 
-.checkout-btn:active, .checkout-btn2:active {
+.checkout-btn:active,
+.checkout-btn2:active {
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(236, 100, 38, 0.3);
 }
 
-/* Responsive */
+
+/* ======================================
+   Animaciones
+====================================== */
+@keyframes slideInFromTop {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromBottom {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 0.7; transform: translateY(0); }
+}
+
+/* ======================================
+   Responsive
+====================================== */
 @media (max-width: 768px) {
   .shopping-cart {
-    width: 400px; /* MODIFICADO: Un poco más estrecho en tablets */
+    width: 400px;
     padding: 24px 16px;
   }
 
@@ -436,21 +457,13 @@
   .item-name {
     font-size: 0.95rem;
   }
-
-  .cart-actions {
-    flex-direction: column;
-  }
-
-  .checkout-btn, .checkout-btn2 {
-    width: 100%;
-  }
 }
 
 @media (max-width: 480px) {
   .shopping-cart {
-    width: 100vw; /* MODIFICADO: Ocupa toda la pantalla en móviles */
+    width: 100vw;
     max-width: 100vw;
-    border-radius: 0; /* MODIFICADO: Sin bordes redondeados en pantalla completa */
+    border-radius: 0;
     padding: 20px 12px;
   }
 
@@ -472,4 +485,12 @@
   .item-price {
     font-size: 0.85rem;
   }
+}
+
+.empty-cart-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #632713;
+  margin-top: 50px;
+  animation: fadeIn 0.5s ease-out;
 }

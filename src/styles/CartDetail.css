@@ -231,7 +231,7 @@
   margin-top: 50px;
 }
 
-.checkout-btn {
+.checkout-btn3 {
   width: 100%;
   margin-top: 20px;
   background: linear-gradient(135deg, #EC6426 0%, #D95420 100%);
@@ -245,7 +245,7 @@
   transition: all 0.3s ease;
 }
 
-.checkout-btn:hover {
+.checkout-btn3:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(236, 100, 38, 0.3);
 }

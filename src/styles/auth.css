@@ -1,98 +1,215 @@
 /* -------- Variables base -------- */
-:root{
-  --bg-cream:#FAE5D5;
-  --peach:#FCEFE6;
-  --accent:#E76B2D;
-  --brown:#592B0D;
-  --text:#111111;
+:root {
+  --bg-cream: #FAE5D5;
+  --peach: #FCEFE6;
+  --accent: #E76B2D;
+  --brown: #592B0D;
+  --text: #111111;
 }
 
-/* Reset útil para inputs con iconos */
-*, *::before, *::after { box-sizing: border-box; }
+/* -------- Reset -------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-/* Página */
-.auth-wrap{
+/* -------- Página -------- */
+.auth-wrap {
   position: fixed;
-  inset: 0;                 /* ocupa toda la ventana */
+  inset: 0;
   display: grid;
-  place-items: center;      /* centra la tarjeta */
+  place-items: center;
   padding: 24px;
   background: var(--bg-cream);
 }
 
-/* Tarjeta */
-.auth-card{
+/* -------- Tarjeta -------- */
+.auth-card {
   width: 520px;
   max-width: 100%;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 6px 0 rgba(0,0,0,.15), 0 16px 40px rgba(0,0,0,.08);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, .15), 0 16px 40px rgba(0, 0, 0, .08);
   padding: 28px 24px;
 }
 
-/* Logo */
-.auth-logo{ text-align:center; margin-bottom: 8px; }
-.auth-logo img{ height: 62px; display:block; margin:0 auto; object-fit:contain; }
-
-/* Título */
-.auth-title{ text-align:center; margin:10px 0 18px; color:#1f2937; font-weight:700; font-size:20px; }
-
-/* Labels */
-.auth-label{ display:block; font-size:14px; font-weight:700; color:#4b5563; margin:14px 0 6px; }
-
-/* Inputs con iconos */
-.input-wrap{ position: relative; }
-.input-base{
-  width: 100%; height: 48px; background: var(--peach);
-  border: 1px solid #e5e7eb; border-radius: 10px; outline: none; padding: 10px 12px;
-  font-size: 14px; color: var(--text);
+/* -------- Logo -------- */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 8px;
 }
-.input-base::placeholder{ color:#9ca3af; }
-
-.input-left, .input-right{
-  position: absolute; top: 50%; transform: translateY(-50%); color: #8a8a8a;
+.auth-logo img {
+  height: 62px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
 }
-.input-left{ left: 12px; }
-.input-right{ right: 6px; }
-.input-with-icons{ padding-left: 40px; padding-right: 44px; }
 
-/* Botón ojo */
-.eye-btn{
-  border: none; background: transparent; padding: 6px 8px; border-radius: 8px; cursor: pointer; color: var(--brown);
+/* -------- Título -------- */
+.auth-title {
+  text-align: center;
+  margin: 10px 0 18px;
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 20px;
 }
-.eye-btn:hover{ color: var(--accent); background: #f8f1ec; }
-.eye-btn:focus{ outline: 2px solid #f8d8c7; }
 
-/* Recordarme + Olvidaste */
-.auth-row{ display:flex; align-items:center; justify-content:space-between; margin:10px 0 16px; }
-.link-accent{ color: var(--accent); text-decoration: none; font-size: 14px; }
-
-/* Error */
-.auth-error{ background:#FDE7E9; color:#B4232C; border:1px solid #F3B3B9; padding:8px 10px; border-radius:8px; font-size:13px; }
-
-/* Botón principal */
-.btn-primary{
-  width: 100%; height:48px; border:none; border-radius:10px;
-  background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; margin-top: 6px;
+/* -------- Labels -------- */
+.auth-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b5563;
+  margin: 14px 0 6px;
 }
-.btn-primary:hover{ filter: brightness(.96); }
 
-/* Separador y redes */
-.auth-sep{ display:flex; align-items:center; gap:12px; margin:18px 0; }
-.auth-sep .line{ flex:1; height:1px; background:#d1d5db; }
-.auth-sep .text{ font-size:12px; color:#6b7280; }
-
-/* Botones sociales (tamaño proporcional) */
-.socials{ display:flex; justify-content:center; gap:22px; }
-.socials .btn{
-  width:58px; height:58px; border-radius:50%;
-  border:2px solid var(--accent); color:var(--accent);
-  display:inline-flex; align-items:center; justify-content:center;
-  background:#fff; cursor:pointer;
+/* -------- Inputs con iconos -------- */
+.input-wrap {
+  position: relative;
 }
-.socials .btn svg{ width:28px; height:28px; display:block; }
+.input-base {
+  width: 100%;
+  height: 48px;
+  background: var(--peach);
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text);
+}
+.input-base::placeholder {
+  color: #9ca3af;
+}
 
-/* Pie */
-.auth-bottom{ text-align:center; margin-top:14px; font-size:14px; }
-.auth-bottom .ask{ color:#111827; }
-.auth-bottom .cta{ color:var(--accent); font-weight:600; cursor:pointer; }
+.input-left,
+.input-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8a8a8a;
+}
+.input-left {
+  left: 12px;
+}
+.input-right {
+  right: 6px;
+}
+.input-with-icons {
+  padding-left: 40px;
+  padding-right: 44px;
+}
+
+/* -------- Botón ojo -------- */
+.eye-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--brown);
+}
+.eye-btn:hover {
+  color: var(--accent);
+  background: #f8f1ec;
+}
+.eye-btn:focus {
+  outline: 2px solid #f8d8c7;
+}
+
+/* -------- Recordarme + Olvidaste -------- */
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 16px;
+}
+.link-accent {
+  color: var(--accent);
+  background: none;
+  border: none;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* -------- Error -------- */
+.auth-error {
+  background: #FDE7E9;
+  color: #B4232C;
+  border: 1px solid #F3B3B9;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* -------- Botón principal -------- */
+.btn-primary {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.btn-primary:hover {
+  filter: brightness(.96);
+}
+
+/* -------- Separador y redes -------- */
+.auth-sep {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+}
+.auth-sep .line {
+  flex: 1;
+  height: 1px;
+  background: #d1d5db;
+}
+.auth-sep .text {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* -------- Botones sociales -------- */
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+}
+.socials .btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  cursor: pointer;
+}
+.socials .btn svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+/* -------- Pie -------- */
+.auth-bottom {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 14px;
+}
+.auth-bottom .ask {
+  color: #111827;
+}
+.auth-bottom .cta {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
