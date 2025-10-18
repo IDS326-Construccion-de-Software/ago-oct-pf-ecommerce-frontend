@@ -114,7 +114,7 @@ export default function Register() {
         <input
           className="input-base input-with-icons"
           type="email"
-          placeholder="Ingrese su correo electrónico"
+          placeholder="Ingrese su correo"
           value={email}
           onChange={e => setEmail(e.target.value)}
           autoComplete="email"
@@ -180,7 +180,7 @@ export default function Register() {
         <input
           className="input-base input-with-icons"
           type="tel"
-          placeholder="Ej: +503 1234-5678"
+          placeholder="Ingrese su teléfono"
           value={phone}
           onChange={e => setPhone(e.target.value)}
           autoComplete="tel"
@@ -238,7 +238,7 @@ export default function Register() {
         <div className="auth-logo">
           <img src={logoUrl} alt="Logo The Revenge" />
         </div>
-        <h2 className="auth-title">Crea tu cuenta</h2>
+  <h2 className="auth-title">Crea tu cuenta</h2>
         <div className="progress">
           <span className={`dot ${currentStep === 1 ? 'active' : ''}`} />
           <div className="line" />

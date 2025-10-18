@@ -8,7 +8,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [
-    ["html", { outputFolder: "test-results/html" }],
+    ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "test-results/results.json" }],
     ["junit", { outputFile: "test-results/junit.xml" }],
     ["list"],

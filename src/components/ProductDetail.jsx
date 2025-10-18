@@ -124,7 +124,7 @@ export function ProductDetail({ productId, onAddToCart }) {
         } else {
           throw new Error('Share API not supported');
         }
-    } catch (err) {
+  } catch {
         // Fallback para navegadores que no soportan la Share API
         navigator.clipboard.writeText(window.location.href);
         Swal.fire({

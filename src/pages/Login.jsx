@@ -77,7 +77,7 @@ export default function Login(){
           <img src={logoUrl} alt="Logo The Revenge" />
         </div>
 
-        <h2 className="auth-title">Inicia sesión en tu cuenta</h2>
+  <h2 className="auth-title">Inicia sesión</h2>
 
         <form onSubmit={onSubmit}>
           <label className="auth-label" htmlFor="login-email">Correo electrónico</label>
@@ -86,7 +86,7 @@ export default function Login(){
             <input
               className="input-base input-with-icons"
               type="email"
-              placeholder="Ingrese su correo electrónico"
+              placeholder="Ingrese su correo"
               value={email}
               onChange={e=>setEmail(e.target.value)}
               autoComplete="email"
@@ -133,7 +133,7 @@ export default function Login(){
 
           {error && <div className="auth-error">{error}</div>}
 
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button type="submit" className="btn-primary" disabled={loading} aria-label="Iniciar sesión">
             {loading ? 'Ingresando…' : 'Iniciar sesión'}
           </button>
 
