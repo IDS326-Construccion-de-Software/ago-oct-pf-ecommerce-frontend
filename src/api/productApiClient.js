@@ -12,7 +12,7 @@ class ProductClient {
 
   async getProductById(id) {
     try {
-      const { data } = await axios.get(`product/${id}`);
+      const { data } = await axios.get(product/${id});
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
@@ -30,7 +30,7 @@ class ProductClient {
 
   async updateProduct(id, body) {
     try {
-      await axios.put(`product/${id}`, body);
+      await axios.put(product/${id}, body);
       return { success: true };
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
@@ -39,7 +39,7 @@ class ProductClient {
 
   async deleteProduct(id) {
     try {
-      await axios.delete(`product/${id}`);
+      await axios.delete(product/${id});
       return { success: true };
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
