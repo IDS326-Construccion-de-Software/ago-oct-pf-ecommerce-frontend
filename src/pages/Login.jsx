@@ -44,6 +44,8 @@ export default function Login(){
         const tokens = result.data.tokens
         if (tokens?.access_token) {
           localStorage.setItem('access_token', tokens.access_token)
+          // Back-compat with services/orderService which reads 'authToken'
+          localStorage.setItem('authToken', tokens.access_token)
         }
         if (tokens?.id_token) {
           localStorage.setItem('id_token', tokens.id_token)

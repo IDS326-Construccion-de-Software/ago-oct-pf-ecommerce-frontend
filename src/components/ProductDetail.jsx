@@ -7,7 +7,9 @@ import Swal from "sweetalert2"
 import "sweetalert2/dist/sweetalert2.min.css" // Importa los estilos
 
 import { ArrowLeft, Share2, ShoppingCart, Zap, Plus, Minus, Shield, Award } from "lucide-react"
-import { getProductById, getRelatedProducts } from "../services/productService"
+import { productClient } from "../api/ProductClient"
+import { categoryClient } from "../api/categoryClient"
+import { productImageClient } from "../api/productImageClient"
 import { formatCurrency } from "../services/orderService"
 import "../styles/ProductDetail.css"
 
@@ -34,17 +36,101 @@ export function ProductDetail({ productId, onAddToCart }) {
       setProduct(null)
 
       try {
-        const productData = await getProductById(productId)
-        setProduct(productData)
+        // 1) Obtener producto desde backend
+        const resp = await productClient.getProductById(productId)
+        if (!resp.success || !resp.data) {
+          throw new Error("Producto no encontrado")
+        }
+        const raw = resp.data
 
-        const related = await getRelatedProducts(productId)
-        setRelatedProducts(related)
+        // 2) Obtener nombre de la categoría
+        let categoryName = "Sin categoría"
+        try {
+          const catResp = await categoryClient.getCategoryById(raw.categoryId || raw.CategoryId)
+          if (catResp.success && catResp.data) categoryName = catResp.data.name || catResp.data.Name || categoryName
+  } catch { /* ignore category lookup errors */ }
+
+        // 3) Obtener imágenes (todas y filtrar por productId, o usar primaria)
+        let images = ["/placeholder.svg"]
+        try {
+          const list = await productImageClient.getProductImages()
+          if (list.success && Array.isArray(list.data)) {
+            const pid = raw.id || raw.Id
+            const mine = list.data.filter(img => (img.productId || img.ProductId) === pid)
+            if (mine.length > 0) {
+              mine.sort((a, b) => (a.order ?? a.Order ?? 0) - (b.order ?? b.Order ?? 0))
+              images = mine.map(i => i.url || i.Url).filter(Boolean)
+            } else {
+              // fallback primaria
+              const pri = await productImageClient.getPrimaryImage(pid)
+              if (pri.success && pri.data?.url) images = [pri.data.url]
+            }
+          }
+  } catch { /* ignore image loading errors */ }
+
+        const normalized = {
+          id: raw.id || raw.Id,
+          name: raw.name || raw.Name,
+          description: raw.description || raw.Description || "",
+          price: raw.price ?? raw.Price ?? 0,
+          brand: raw.brand || raw.Brand || "",
+          category: categoryName,
+          categoryId: raw.categoryId || raw.CategoryId,
+          images: images.length > 0 ? images : ["/placeholder.svg"],
+        }
+
+        setProduct(normalized)
+
+        // 4) Productos relacionados por misma categoría (máx 6)
+        try {
+          const all = await productClient.getAllProducts()
+          if (all.success && Array.isArray(all.data)) {
+            const relBase = all.data
+              .filter(p => (p.categoryId || p.CategoryId) === normalized.categoryId && (p.id || p.Id) !== normalized.id)
+              .slice(0, 6)
+
+            // Mapa primarias
+            let imagesMap = {}
+            try {
+              const imgListResp = await productImageClient.getProductImages()
+              if (imgListResp.success && Array.isArray(imgListResp.data)) {
+                const grouped = imgListResp.data.reduce((acc, img) => {
+                  const pid = img.productId || img.ProductId
+                  if (!pid) return acc
+                  if (!acc[pid]) acc[pid] = []
+                  acc[pid].push(img)
+                  return acc
+                }, {})
+                imagesMap = Object.keys(grouped).reduce((acc, pid) => {
+                  const list = grouped[pid]
+                  const primary = list.find(i => i.isPrimary || i.IsPrimary) || list.sort((a,b) => (a.order ?? a.Order ?? 0) - (b.order ?? b.Order ?? 0))[0]
+                  if (primary?.url || primary?.Url) acc[pid] = [primary.url || primary.Url]
+                  return acc
+                }, {})
+              }
+            } catch { /* ignore related images errors */ }
+
+            const relNorm = relBase.map(p => {
+              const pid = p.id || p.Id
+              return {
+                id: pid,
+                name: p.name || p.Name,
+                price: p.price ?? p.Price ?? 0,
+                brand: p.brand || p.Brand || "",
+                images: imagesMap[pid] || ["/placeholder.svg"],
+              }
+            })
+            setRelatedProducts(relNorm)
+          } else {
+            setRelatedProducts([])
+          }
+        } catch { setRelatedProducts([]) }
 
         // Reiniciar estado para el nuevo producto
         setQuantity(1)
         setSelectedImage(0)
-      } catch {
-        console.error("Error cargando el producto")
+      } catch (e) {
+        console.error("Error cargando el producto", e)
         setError("No pudimos encontrar el producto que buscas.")
       } finally {
         setLoading(false)
@@ -175,9 +261,9 @@ export function ProductDetail({ productId, onAddToCart }) {
           <ArrowLeft />
           Volver
         </button>
-        <div className="breadcrumb">
+        {/* <div className="breadcrumb">
           <span>Inicio</span> / <span>{product.category}</span> / <span>{product.name}</span>
-        </div>
+        </div> */}
       </div>
 
       <div className="product-main">

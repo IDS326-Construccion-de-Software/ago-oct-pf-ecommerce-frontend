@@ -1,6 +1,8 @@
 /* eslint react-refresh/only-export-components: 0 */
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === "true";
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -46,24 +48,39 @@ export function AuthProvider({ children }) {
       setUser(data);
       setError(null);
     } catch {
-      setUser({
-        id: 1,
-        name: "Usuario de prueba",
-        email: "usuario@mock.com",
-        phone: "+1 809-000-0000",
-        location: "Santo Domingo, RD",
-        memberSince: "2024",
-        memberStatus: "Miembro Activo",
-        avatar: "👤",
-      });
-      setError(null);
+      if (USE_MOCK_AUTH) {
+        setUser({
+          id: "user-mock-guid",
+          name: "Usuario de prueba",
+          email: "usuario@mock.com",
+          phone: "+1 809-000-0000",
+          location: "Santo Domingo, RD",
+          memberSince: "2024",
+          memberStatus: "Miembro Activo",
+          avatar: "👤",
+        });
+        setError(null);
+      } else {
+        // En modo real, no autenticamos por defecto
+        setUser(null);
+        setError(null);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const login = (payload) => setUser(payload);
-  const logout = () => setUser(null);
+  const logout = () => {
+    try {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('id_token');
+      localStorage.removeItem('authToken');
+    } catch {
+      // ignore storage errors
+    }
+    setUser(null);
+  };
 
   return (
     <AuthContext.Provider

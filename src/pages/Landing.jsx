@@ -61,13 +61,13 @@ const Landing = () => {
     },
     {
       imgUrl:
-        "https://images.pexels.com/photos/750952/pexels-photo-750952.jpeg?auto=compress&cs=tinysrgb&w=1600",
+        "https://media.istockphoto.com/id/496564915/photo/bread-and-buns.jpg?s=612x612&w=0&k=20&c=qkmz5pViJ-4T5PLSLYRjmp_HAZ5-VAcar4zaZ-rzMA8=",
       imgAlt: "Vegetales frescos",
-      badge: "VARIEDAD Y FRESCURA",
-      title: "En frutas y vegetales",
+      badge: "VARIEDAD Y DULZURA",
+      title: "Postres y panadería",
       subtitle: "Aprovecha las ofertas",
       ctaLabel: "Comprar ahora",
-      ctaHref: "/categorias/vegetales",
+      ctaHref: "/categorias/postres",
       span: "wide",
     },
   ];

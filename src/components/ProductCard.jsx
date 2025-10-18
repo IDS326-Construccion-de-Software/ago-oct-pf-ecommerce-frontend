@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
   
   return (
     <div className="product-card">
-      <Link to={`/product/${product.id}`} className="product-link">
+  <Link to={`/producto/${product.id}`} className="product-link">
         <div className="product-image-container">
           <img 
             src={product.images && product.images[0]} 

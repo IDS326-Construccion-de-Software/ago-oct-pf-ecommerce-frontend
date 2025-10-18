@@ -1,4 +1,5 @@
 // src/components/PromoGrid.jsx
+import { Link } from "react-router-dom";
 import "../styles/PromoGrid.css";
 
 export default function PromoGrid({ items = [] }) {
@@ -40,16 +41,18 @@ export default function PromoGrid({ items = [] }) {
           </div>
         );
 
-        const MediaWrapped = it.ctaHref ? (
-          <a
-            href={it.ctaHref}
-            target={it.target || "_self"}
-            rel={it.target === "_blank" ? "noopener noreferrer" : undefined}
+        const to = it.ctaHref
+          ? it.ctaHref.replace(/^\/categorias?\//, "/products/")
+          : undefined;
+
+        const MediaWrapped = to ? (
+          <Link
+            to={to}
             aria-label={it.imgAlt || it.title || "Ir a promoción"}
             className="promo-media-link"
           >
             {CardMedia}
-          </a>
+          </Link>
         ) : (
           CardMedia
         );
@@ -66,17 +69,10 @@ export default function PromoGrid({ items = [] }) {
               {it.title && <h3 className="promo-title">{it.title}</h3>}
               {it.subtitle && <p className="promo-subtitle">{it.subtitle}</p>}
 
-              {it.ctaHref && (
-                <a
-                  href={it.ctaHref}
-                  className="btn-orange"
-                  target={it.target || "_self"}
-                  rel={
-                    it.target === "_blank" ? "noopener noreferrer" : undefined
-                  }
-                >
+              {to && (
+                <Link to={to} className="btn-orange">
                   {it.ctaLabel || "Comprar ahora"}
-                </a>
+                </Link>
               )}
             </div>
 
