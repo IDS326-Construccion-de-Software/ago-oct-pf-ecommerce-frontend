@@ -26,10 +26,10 @@ const Products = () => {
   ];
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts =  () => {
       try {
         setLoading(true);
-        const response = await ProductClient.getAllProducts(1, 20);
+        const response =  ProductClient.getAllProducts(1, 20);
         setProducts(response.data.items);
         setFilteredProducts(response.data.items);
       } catch (error) {
@@ -44,9 +44,9 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchCategories =  () => {
       try {
-        const response = await ProductClient.getAllCategories(); // Endpoint de categorías
+        const response =  ProductClient.getAllCategories(); // Endpoint de categorías
         setCategories(['all', ...response.data]);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -57,9 +57,9 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchBrands =  () => {
       try {
-        const response = await ProductClient.getAllBrands(); 
+        const response =  ProductClient.getAllBrands(); 
         setBrands(['all', ...response.data]);
       } catch (error) {
         console.error('Error fetching brands:', error);

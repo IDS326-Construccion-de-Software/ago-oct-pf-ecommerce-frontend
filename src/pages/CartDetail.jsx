@@ -7,7 +7,7 @@ import CartItemsList from "../components/CartItemsList";
 import { useState, useEffect } from "react";
 import Modal from "../components/Modal";
 import ProductCarousel from "../components/ProductCarousel";
-import { getAllProducts } from "../services/productService";
+import { ProductClient } from "../api/ProductClient";
 import PaymentModal from "../components/PaymentModal";
 
 export default function CartDetail() {
@@ -30,11 +30,11 @@ export default function CartDetail() {
   const [colaFurraAdded, setColaFurraAdded] = useState(false);
 
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadProducts = () => {
       try {
         setLoadingProducts(true);
-        const response = await getAllProducts(1, 20);
-        setProducts(response.items);
+        const response = ProductClient.getAllProducts(1, 20);
+        setProducts(response.data?.items || []);
       } catch (err) {
         setProducts([]);
       } finally {
