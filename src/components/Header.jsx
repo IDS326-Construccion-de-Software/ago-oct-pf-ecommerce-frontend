@@ -1,5 +1,5 @@
-import { use, useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/LogoTheRevenge.svg";
 import { User, ShoppingCart as CartIcon, HelpCircle, Search } from "lucide-react";
 import "../styles/Header.css";
@@ -7,13 +7,22 @@ import { useCart } from "../context/CartContext";
 
 export default function Header() {
   const { cartItems, setIsCartOpen } = useCart(); 
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const toggleCart = () => {
     setIsCartOpen(true);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(`/products?search=${encodeURIComponent(search.trim())}`);
+    }
+  };
+
   const CATEGORIES = [
-    "Aperitivos", "Postres", "Congelados", "Bebidas", "Pescados", 
+    "Todos", "Aperitivos", "Postres", "Congelados", "Bebidas", "Pescados", 
     "Carnes", "Mascotas", "Bebés"
   ];
 
@@ -49,9 +58,14 @@ export default function Header() {
           <form
             className="search"
             role="search"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSearchSubmit}
           >
-            <input type="search" placeholder="Busca tu producto" />
+            <input
+              type="search"
+              placeholder="Busca tu producto"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
             <button type="submit" aria-label="Buscar" className="search-btn">
               <Search className="search-icon" />
             </button>
@@ -67,7 +81,7 @@ export default function Header() {
               {CATEGORIES.map((c) => (
                 <li key={c} className="cat-item">
                   <NavLink
-                    to={`/categoria/${slug(c)}`}
+                    to={c === "Todos" ? "/products" : `/products/${slug(c)}`}
                     className={({ isActive }) =>
                       `cat-link ${isActive ? "active" : ""}`
                     }

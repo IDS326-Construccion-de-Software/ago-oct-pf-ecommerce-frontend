@@ -1,23 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { getAllProducts } from '../services/productService';
+import { ProductClient } from "../api/ProductClient";
 import ProductCard from '../components/ProductCard';
+import Header from '../components/Header'; 
 import '../styles/ProductsPage.css';
+import LecheBanner from "../assets/BannerFootOfertadeLeche-01.svg";
+import Footer from '../components/Footer';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('default');
+
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedBrand, setSelectedBrand] = useState('all');
+  const [selectedPrice, setSelectedPrice] = useState('all');
+
+  const priceRanges = [
+    { label: 'Todos', value: 'all' },
+    { label: 'Menor a $50', value: '0-50' },
+    { label: '$50 - $1000', value: '50-1000' },
+    { label: '$1000 - $2000', value: '1000-2000' },
+    { label: 'Mayor a $2000', value: '2000-' },
+  ];
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const data = await getAllProducts();
-        setProducts(data.items);
-        setFilteredProducts(data.items);
+        const response = await ProductClient.getAllProducts(1, 20);
+        setProducts(response.data.items);
+        setFilteredProducts(response.data.items);
       } catch (error) {
         console.error('Error fetching products:', error);
         setProducts([]);
@@ -26,131 +40,166 @@ const Products = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
-  // Get unique brands for filter
-  const brands = ['all', ...new Set(products.map(product => product.brand))];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await ProductClient.getAllCategories(); // Endpoint de categorías
+        setCategories(['all', ...response.data]);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setCategories(['all']);
+      }
+    };
+    fetchCategories();
+  }, []);
 
-  // Apply filters and search
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await ProductClient.getAllBrands(); 
+        setBrands(['all', ...response.data]);
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+        setBrands(['all']);
+      }
+    };
+    fetchBrands();
+  }, []);
+
   useEffect(() => {
     let result = [...products];
 
-    // Apply search filter
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result.filter(
-        product =>
-          product.name.toLowerCase().includes(term) ||
-          product.brand.toLowerCase().includes(term)
-      );
+    if (selectedCategory !== 'all') {
+      result = result.filter(p => p.category === selectedCategory);
     }
 
-    // Apply brand filter
     if (selectedBrand !== 'all') {
-      result = result.filter(product => product.brand === selectedBrand);
+      result = result.filter(p => p.brand === selectedBrand);
     }
 
-    // Apply sorting
-    result.sort((a, b) => {
-      switch (sortBy) {
-        case 'price-asc':
-          return a.price - b.price;
-        case 'price-desc':
-          return b.price - a.price;
-        case 'name-asc':
-          return a.name.localeCompare(b.name);
-        case 'name-desc':
-          return b.name.localeCompare(a.name);
-        case 'discount':
-          const discountA = ((a.originalPrice - a.price) / a.originalPrice) * 100;
-          const discountB = ((b.originalPrice - b.price) / b.originalPrice) * 100;
-          return discountB - discountA;
-        default:
-          return 0;
-      }
-    });
+    if (selectedPrice !== 'all') {
+      result = result.filter(p => {
+        const price = p.price;
+        const [min, max] = selectedPrice.split('-');
+        if (max === '') return price >= parseFloat(min);
+        return price >= parseFloat(min) && price <= parseFloat(max);
+      });
+    }
 
     setFilteredProducts(result);
-  }, [products, searchTerm, sortBy, selectedBrand]);
+  }, [products, selectedCategory, selectedBrand, selectedPrice]);
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-      </div>
+      <>
+        <Header />
+        <div className="loading-container">
+          <div className="spinner"></div>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="products-page">
-      <div className="products-header">
-        <h1>Nuestros Productos</h1>
-        <div className="products-controls">
-          <div className="search-container">
-            <input
-              type="text"
-              placeholder="Buscar productos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-            <i className="search-icon">🔍</i>
-          </div>
-          
-          <div className="filters-container">
-            <select 
-              value={selectedBrand} 
-              onChange={(e) => setSelectedBrand(e.target.value)}
-              className="filter-select"
-            >
-              {brands.map((brand) => (
-                <option key={brand} value={brand}>
-                  {brand === 'all' ? 'Todas las marcas' : brand}
-                </option>
-              ))}
-            </select>
-            
-            <select 
-              value={sortBy} 
-              onChange={(e) => setSortBy(e.target.value)}
-              className="sort-select"
-            >
-              <option value="default">Ordenar por</option>
-              <option value="price-asc">Precio: Menor a mayor</option>
-              <option value="price-desc">Precio: Mayor a menor</option>
-              <option value="name-asc">Nombre: A-Z</option>
-              <option value="name-desc">Nombre: Z-A</option>
-              <option value="discount">Mayor descuento</option>
-            </select>
-          </div>
+    <>
+      <Header />
+      <div className="container" style={{ margin: "auto" }}>
+        <img
+          src={LecheBanner}
+          alt="Banner foot chocolate"
+          style={{ width: "100%" }}
+        />
+      </div>
+      <div className="products-page">
+
+        <div className="products-container">
+
+          <aside className="filters-sidebar">
+            <h2>Filtros</h2>
+
+            <div className="filter-group">
+              <label>Categoría</label>
+              <select 
+                value={selectedCategory} 
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>
+                    {cat === 'all' ? 'Todas las categorías' : cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Marca</label>
+              <select 
+                value={selectedBrand} 
+                onChange={(e) => setSelectedBrand(e.target.value)}
+              >
+                {brands.map(brand => (
+                  <option key={brand} value={brand}>
+                    {brand === 'all' ? 'Todas las marcas' : brand}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Precio</label>
+              <select 
+                value={selectedPrice} 
+                onChange={(e) => setSelectedPrice(e.target.value)}
+              >
+                {priceRanges.map(range => (
+                  <option key={range.value} value={range.value}>
+                    {range.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Botón restablecer filtros siempre visible debajo de los filtros */}
+            <div className="reset-filters-wrapper" style={{ marginTop: '1.5rem' }}>
+              <button 
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedBrand('all');
+                  setSelectedPrice('all');
+                }}
+                className="reset-filters-btn"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          </aside>
+
+          {/* Productos a la derecha */}
+          <section className="products-grid-container">
+            <div className="products-content">
+              {filteredProducts.length === 0 ? (
+                <div className="no-results">
+                  <h3>No hay productos disponibles</h3>
+                  <p>Intenta cambiando categoría, marca o precio.</p>
+                </div>
+              ) : (
+                <div className="products-grid">
+                  {filteredProducts.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+
         </div>
       </div>
+      <Footer />
+    </>
 
-      {filteredProducts.length === 0 ? (
-        <div className="no-results">
-          <h3>No se encontraron productos</h3>
-          <p>Intenta con otros términos de búsqueda o filtros.</p>
-          <button 
-            onClick={() => {
-              setSearchTerm('');
-              setSelectedBrand('all');
-              setSortBy('default');
-            }}
-            className="reset-filters-btn"
-          >
-            Restablecer filtros
-          </button>
-        </div>
-      ) : (
-        <div className="products-grid">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
-    </div>
   );
 };
 
