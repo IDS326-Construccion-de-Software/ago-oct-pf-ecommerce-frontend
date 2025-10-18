@@ -1,45 +1,45 @@
 import axios from "./axiosConfig";
 
-class ProductClient {
-  async getAllProducts() {
+class ShoppingCartClient {
+  async getCartsByUser(userId) {
     try {
-      const { data } = await axios.get("product");
+      const { data } = await axios.get(cart/user/${userId});
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async getProductById(id) {
+  async getCartById(id) {
     try {
-      const { data } = await axios.get(`product/${id}`);
+      const { data } = await axios.get(cart/${id});
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async createProduct(body) {
+  async createCart(body) {
     try {
-      const { data } = await axios.post("product", body);
+      const { data } = await axios.post("cart", body);
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async updateProduct(id, body) {
+  async updateCart(id, body) {
     try {
-      await axios.put(`product/${id}`, body);
+      await axios.put(cart/${id}, body);
       return { success: true };
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async deleteProduct(id) {
+  async deleteCart(id) {
     try {
-      await axios.delete(`product/${id}`);
+      await axios.delete(cart/${id});
       return { success: true };
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
@@ -47,4 +47,4 @@ class ProductClient {
   }
 }
 
-export { ProductClient };
+export { ShoppingCartClient };

@@ -1,45 +1,45 @@
 import axios from "./axiosConfig";
 
-class ProductClient {
-  async getAllProducts() {
+class CategoryClient {
+  async getCategories() {
     try {
-      const { data } = await axios.get("product");
+      const { data } = await axios.get("category");
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async getProductById(id) {
+  async getCategoryById(id) {
     try {
-      const { data } = await axios.get(`product/${id}`);
+      const { data } = await axios.get(category/${id});
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async createProduct(body) {
+  async createCategory(body) {
     try {
-      const { data } = await axios.post("product", body);
+      const { data } = await axios.post("category", body);
       return data;
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async updateProduct(id, body) {
+  async updateCategory(id, body) {
     try {
-      await axios.put(`product/${id}`, body);
+      await axios.put(category/${id}, body);
       return { success: true };
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
     }
   }
 
-  async deleteProduct(id) {
+  async deleteCategory(id) {
     try {
-      await axios.delete(`product/${id}`);
+      await axios.delete(category/${id});
       return { success: true };
     } catch (error) {
       return error instanceof Error ? error.message : "Unknown error";
@@ -47,4 +47,4 @@ class ProductClient {
   }
 }
 
-export { ProductClient };
+export { CategoryClient };
