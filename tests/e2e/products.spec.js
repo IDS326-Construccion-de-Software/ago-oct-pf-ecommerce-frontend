@@ -79,10 +79,7 @@ test.describe("Product Browsing", () => {
   });
 
   test("should show loading state", async ({ page }) => {
-    const loadingIndicator = page.locator(".loading-container, .spinner");
-
     await page.goto("/products");
-
     await page.waitForSelector(
       ".products-grid, .no-results, .loading-container",
       { timeout: 10000 }
@@ -93,7 +90,7 @@ test.describe("Product Browsing", () => {
     await expect(page.locator('img[alt*="Banner"]')).toBeVisible();
   });
 
-  test("should have responsive filters sidebar", async ({ page, viewport }) => {
+  test("should have responsive filters sidebar", async ({ page }) => {
     await expect(page.locator(".filters-sidebar")).toBeVisible();
   });
 });

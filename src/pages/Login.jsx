@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import '../styles/auth.css'
 import logoUrl from '../assets/LogoTheRevenge.svg'
 import isEmail from 'validator/lib/isEmail'
@@ -80,7 +80,7 @@ export default function Login(){
         <h2 className="auth-title">Inicia sesión en tu cuenta</h2>
 
         <form onSubmit={onSubmit}>
-          <label className="auth-label">Correo electrónico</label>
+          <label className="auth-label" htmlFor="login-email">Correo electrónico</label>
           <div className="input-wrap" style={{ marginBottom: 18 }}>
             <span className="input-left"><Mail size={18}/></span>
             <input
@@ -90,10 +90,11 @@ export default function Login(){
               value={email}
               onChange={e=>setEmail(e.target.value)}
               autoComplete="email"
+              id="login-email"
             />
           </div>
 
-          <label className="auth-label">Contraseña</label>
+          <label className="auth-label" htmlFor="login-password">Contraseña</label>
           <div className="input-wrap" style={{ marginBottom: 18 }}>
             <span className="input-left"><Lock size={18}/></span>
             <input
@@ -103,11 +104,14 @@ export default function Login(){
               value={pwd}
               onChange={e=>setPwd(e.target.value)}
               autoComplete="current-password"
+              id="login-password"
             />
             <button
               type="button"
               className="eye-btn input-right"
               onClick={()=>setShowPwd(s=>!s)}
+              aria-label={showPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              aria-pressed={showPwd}
             >
               <Eye size={20}/>
             </button>
@@ -142,13 +146,13 @@ export default function Login(){
 
           <div className="auth-bottom">
             <span className="ask">¿No tienes una cuenta? </span>
-            <span
+            <Link
+              to="/register"
               className="cta"
-              style={{ cursor: "pointer", color: "#EC6426", textDecoration: "underline" }}
-              onClick={() => navigate('/register')}
+              style={{ color: "#EC6426", textDecoration: "underline" }}
             >
               Regístrate aquí
-            </span>
+            </Link>
           </div>
         </form>
       </div>

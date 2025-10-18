@@ -98,8 +98,9 @@ const Products = () => {
       result = result.filter(p => {
         const price = p.price || p.Price;
         const [min, max] = selectedPrice.split('-');
-        if (max === '') return price >= parseFloat(min);
-        return price >= parseFloat(min) && price <= parseFloat(max);
+        const minVal = Number.parseFloat(min);
+        const maxVal = max === '' ? Number.POSITIVE_INFINITY : Number.parseFloat(max);
+        return price >= minVal && price <= maxVal;
       });
     }
 
@@ -135,8 +136,9 @@ const Products = () => {
             <h2>Filtros</h2>
 
             <div className="filter-group">
-              <label>Categoría</label>
+              <label htmlFor="filter-category">Categoría</label>
               <select 
+                id="filter-category"
                 value={selectedCategory} 
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
@@ -149,8 +151,9 @@ const Products = () => {
             </div>
 
             <div className="filter-group">
-              <label>Marca</label>
+              <label htmlFor="filter-brand">Marca</label>
               <select 
+                id="filter-brand"
                 value={selectedBrand} 
                 onChange={(e) => setSelectedBrand(e.target.value)}
               >
@@ -163,8 +166,9 @@ const Products = () => {
             </div>
 
             <div className="filter-group">
-              <label>Precio</label>
+              <label htmlFor="filter-price">Precio</label>
               <select 
+                id="filter-price"
                 value={selectedPrice} 
                 onChange={(e) => setSelectedPrice(e.target.value)}
               >

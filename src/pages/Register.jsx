@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import '../styles/auth.css'
 import logoUrl from '../assets/LogoTheRevenge.svg'
 import isEmail from 'validator/lib/isEmail'
@@ -59,7 +59,7 @@ export default function Register() {
         password: pwd,
         cellphone: phone || null,
         birthdate: birthdate || null,
-        numIdentification: numIdentification ? parseInt(numIdentification) : null
+        numIdentification: numIdentification ? Number.parseInt(numIdentification, 10) : null
       }
       
       console.log('Registrando usuario:', registerData)
@@ -94,7 +94,7 @@ export default function Register() {
 
   const renderStep1 = () => (
     <form onSubmit={handleStep1Submit}>
-      <label className="auth-label">Nombre completo</label>
+      <label className="auth-label" htmlFor="register-name">Nombre completo</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><User size={18} /></span>
         <input
@@ -104,10 +104,11 @@ export default function Register() {
           value={name}
           onChange={e => setName(e.target.value)}
           autoComplete="name"
+          id="register-name"
         />
       </div>
 
-      <label className="auth-label">Correo electrónico</label>
+      <label className="auth-label" htmlFor="register-email">Correo electrónico</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><Mail size={18} /></span>
         <input
@@ -117,10 +118,11 @@ export default function Register() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           autoComplete="email"
+          id="register-email"
         />
       </div>
 
-      <label className="auth-label">Contraseña</label>
+      <label className="auth-label" htmlFor="register-password">Contraseña</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><Lock size={18} /></span>
         <input
@@ -130,17 +132,20 @@ export default function Register() {
           value={pwd}
           onChange={e => setPwd(e.target.value)}
           autoComplete="new-password"
+          id="register-password"
         />
         <button
           type="button"
           className="eye-btn input-right"
           onClick={() => setShowPwd(s => !s)}
+          aria-label={showPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          aria-pressed={showPwd}
         >
           <Eye size={20} />
         </button>
       </div>
 
-      <label className="auth-label">Confirmar contraseña</label>
+      <label className="auth-label" htmlFor="register-password-confirm">Confirmar contraseña</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><Lock size={18} /></span>
         <input
@@ -150,6 +155,7 @@ export default function Register() {
           value={confirmPwd}
           onChange={e => setConfirmPwd(e.target.value)}
           autoComplete="new-password"
+          id="register-password-confirm"
         />
       </div>
 
@@ -161,14 +167,14 @@ export default function Register() {
 
       <div className="auth-bottom">
         <span className="ask">¿Ya tienes una cuenta? </span>
-        <span className="cta" onClick={() => navigate('/login')}>Inicia sesión</span>
+        <Link className="cta" to="/login">Inicia sesión</Link>
       </div>
     </form>
   )
 
   const renderStep2 = () => (
     <form onSubmit={handleStep2Submit}>
-      <label className="auth-label">Número de teléfono (opcional)</label>
+      <label className="auth-label" htmlFor="register-phone">Número de teléfono (opcional)</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><Phone size={18} /></span>
         <input
@@ -178,10 +184,11 @@ export default function Register() {
           value={phone}
           onChange={e => setPhone(e.target.value)}
           autoComplete="tel"
+          id="register-phone"
         />
       </div>
 
-      <label className="auth-label">Fecha de nacimiento (opcional)</label>
+      <label className="auth-label" htmlFor="register-birthdate">Fecha de nacimiento (opcional)</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><Calendar size={18} /></span>
         <input
@@ -191,10 +198,11 @@ export default function Register() {
           value={birthdate}
           onChange={e => setBirthdate(e.target.value)}
           autoComplete="bday"
+          id="register-birthdate"
         />
       </div>
 
-      <label className="auth-label">Número de identificación (opcional)</label>
+      <label className="auth-label" htmlFor="register-id">Número de identificación (opcional)</label>
       <div className="input-wrap" style={{ marginBottom: 32 }}>
         <span className="input-left"><CreditCard size={18} /></span>
         <input
@@ -204,6 +212,7 @@ export default function Register() {
           value={numIdentification}
           onChange={e => setNumIdentification(e.target.value)}
           autoComplete="off"
+          id="register-id"
         />
       </div>
 
@@ -215,9 +224,9 @@ export default function Register() {
 
       <div className="auth-bottom">
         <span className="ask">¿Ya tienes una cuenta? </span>
-        <span className="cta" onClick={() => navigate('/login')}>Inicia sesión</span>
+        <Link className="cta" to="/login">Inicia sesión</Link>
       </div>
-      <button type="button" className="back-arrow" onClick={goBackToStep1}>
+      <button type="button" className="back-arrow" onClick={goBackToStep1} aria-label="Volver al paso anterior">
         ← Volver
       </button>
     </form>

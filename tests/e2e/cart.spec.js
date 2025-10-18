@@ -38,10 +38,6 @@ test.describe("Shopping Cart Flow", () => {
       .first();
 
     if (await addToCartButton.isVisible()) {
-      const initialCartCount = await page
-        .locator('[class*="cart-count"], [class*="badge"]')
-        .textContent()
-        .catch(() => "0");
       await addToCartButton.click();
       await page.waitForTimeout(1000);
     }
