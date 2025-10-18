@@ -16,7 +16,7 @@ import UserProfile from './pages/UserProfile';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrdersPage from './pages/OrdersPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import Register from './pages/Register'
+import Register from './pages/Register';
 
 
 export default function App() {
@@ -40,6 +40,7 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/register" element={<Register />} />
+
               </Routes>
             </GlobalCartWrapper>
           </OrdersProvider>

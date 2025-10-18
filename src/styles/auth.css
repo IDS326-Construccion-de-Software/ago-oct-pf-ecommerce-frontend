@@ -1,10 +1,11 @@
 /* -------- Variables base -------- */
 :root {
-  --bg-cream: #FAE5D5;
-  --peach: #FCEFE6;
-  --accent: #E76B2D;
-  --brown: #592B0D;
-  --text: #111111;
+  --bg-cream: #f8f6f4;       /* Fondo claro tipo card 1 */
+  --peach: #fff5ec;           /* Input background */
+  --accent: #d2691e;          /* Naranja principal */
+  --brown: #6b4a3a;           /* Marrón para texto */
+  --text: #2d1810;            /* Texto principal */
+  --error: #dc3545;           /* Error rojo */
 }
 
 /* -------- Reset -------- */
@@ -16,69 +17,83 @@
 .auth-wrap {
   position: fixed;
   inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: var(--bg-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, var(--peach) 0%, var(--bg-cream) 100%);
 }
 
 /* -------- Tarjeta -------- */
 .auth-card {
-  width: 520px;
-  max-width: 100%;
-  background: #fff;
+  width: 480px;
+  max-width: 90vw;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
-  box-shadow: 0 6px 0 rgba(0, 0, 0, .15), 0 16px 40px rgba(0, 0, 0, .08);
-  padding: 28px 24px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  position: relative;
 }
 
 /* -------- Logo -------- */
 .auth-logo {
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 1.5rem;
 }
 .auth-logo img {
-  height: 62px;
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;
+  width: 160px;
+  height: auto;
+  max-width: 100%;
 }
 
 /* -------- Título -------- */
 .auth-title {
   text-align: center;
-  margin: 10px 0 18px;
-  color: #1f2937;
+  margin-bottom: 1rem;
+  color: var(--brown);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 /* -------- Labels -------- */
 .auth-label {
   display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: #4b5563;
-  margin: 14px 0 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
 }
 
 /* -------- Inputs con iconos -------- */
 .input-wrap {
   position: relative;
-}
-.input-base {
-  width: 100%;
-  height: 48px;
+  display: flex;
+  align-items: center;
   background: var(--peach);
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  outline: none;
-  padding: 10px 12px;
-  font-size: 14px;
-  color: var(--text);
+  border: 2px solid #e5d4c8;
+  border-radius: 12px;
+  padding: 0.75rem;
+  transition: border-color 0.3s ease;
 }
+
+.input-wrap:focus-within {
+  border-color: var(--accent);
+}
+
+.input-base {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--text);
+  padding-left: 0.5rem;
+}
+
 .input-base::placeholder {
-  color: #9ca3af;
+  color: #8b7355;
 }
 
 .input-left,
@@ -86,7 +101,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  color: #8a8a8a;
+  color: #6b4a3a;
 }
 .input-left {
   left: 12px;
@@ -94,6 +109,7 @@
 .input-right {
   right: 6px;
 }
+
 .input-with-icons {
   padding-left: 40px;
   padding-right: 44px;
@@ -103,17 +119,53 @@
 .eye-btn {
   border: none;
   background: transparent;
-  padding: 6px 8px;
+  padding: 0.25rem;
   border-radius: 8px;
   cursor: pointer;
   color: var(--brown);
+  transition: color 0.3s ease, background 0.3s ease;
 }
+
 .eye-btn:hover {
   color: var(--accent);
-  background: #f8f1ec;
+  background: rgba(210,105,30,0.05);
 }
-.eye-btn:focus {
-  outline: 2px solid #f8d8c7;
+
+/* -------- Error -------- */
+.auth-error {
+  background: #FDE7E9;
+  color: var(--error);
+  border: 1px solid #F3B3B9;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* -------- Botón principal -------- */
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #ff6b35 0%, #d2691e 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(210,105,30,0.3);
+  margin-top: 20px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(210,105,30,0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(210,105,30,0.3);
 }
 
 /* -------- Recordarme + Olvidaste -------- */
@@ -123,42 +175,16 @@
   justify-content: space-between;
   margin: 10px 0 16px;
 }
+
 .link-accent {
   color: var(--accent);
-  background: none;
-  border: none;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* -------- Error -------- */
-.auth-error {
-  background: #FDE7E9;
-  color: #B4232C;
-  border: 1px solid #F3B3B9;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-}
-
-/* -------- Botón principal -------- */
-.btn-primary {
-  width: 100%;
-  height: 48px;
-  border: none;
-  border-radius: 10px;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-  margin-top: 6px;
-}
-.btn-primary:hover {
-  filter: brightness(.96);
-}
-
-/* -------- Separador y redes -------- */
+/* -------- Separador -------- */
 .auth-sep {
   display: flex;
   align-items: center;
@@ -167,12 +193,12 @@
 }
 .auth-sep .line {
   flex: 1;
-  height: 1px;
-  background: #d1d5db;
+  height: 2px;
+  background: #e5d4c8;
 }
 .auth-sep .text {
-  font-size: 12px;
-  color: #6b7280;
+  font-size: 0.75rem;
+  color: #6b4a3a;
 }
 
 /* -------- Botones sociales -------- */
@@ -181,32 +207,37 @@
   justify-content: center;
   gap: 22px;
 }
+
 .socials .btn {
   width: 58px;
   height: 58px;
   border-radius: 50%;
   border: 2px solid var(--accent);
   color: var(--accent);
-  display: inline-flex;
+  background: #fff;
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
   cursor: pointer;
+  padding: 0;          /* eliminar padding extra */
 }
+
 .socials .btn svg {
   width: 28px;
   height: 28px;
   display: block;
+  fill: var(--accent);  /* asegura que el color sea el mismo que el borde */
 }
 
 /* -------- Pie -------- */
 .auth-bottom {
   text-align: center;
-  margin-top: 14px;
-  font-size: 14px;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--text);
 }
 .auth-bottom .ask {
-  color: #111827;
+  color: var(--text);
 }
 .auth-bottom .cta {
   color: var(--accent);

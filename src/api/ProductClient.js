@@ -1,21 +1,38 @@
 import apiClient from "./axiosConfig"; 
 
 export const ProductClient = {
-  getAllProducts: (page = 1, limit = 20) => {
-    return apiClient.get("/products", {
-      params: { page, limit }
-    });
+  getAllProducts: async (page = 1, limit = 20) => {
+    try {
+      return await apiClient.get("/products", {
+        params: { page, limit }
+      });
+    } catch (error) {
+      // Puedes personalizar el manejo de errores aquí
+      throw error;
+    }
   },
 
-  getProductById: (id) => {
-    return apiClient.get(`/products/${id}`);
+  getProductById: async (id) => {
+    try {
+      return await apiClient.get(`/products/${id}`);
+    } catch (error) {
+      throw error;
+    }
   },
 
-  getAllCategories: () => {
-    return apiClient.get("/categories");
+  getAllCategories: async () => {
+    try {
+      return await apiClient.get("/categories");
+    } catch (error) {
+      throw error;
+    }
   },
 
-  getAllBrands: () => {
-    return apiClient.get("/brands");
+  getAllBrands: async () => {
+    try {
+      return await apiClient.get("/brands");
+    } catch (error) {
+      throw error;
+    }
   },
 };
