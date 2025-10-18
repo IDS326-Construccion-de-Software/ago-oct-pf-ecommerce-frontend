@@ -70,9 +70,9 @@ export default function Header() {
               <Search className="search-icon" />
             </button>
           </form>
-          <NavLink to="/ayuda" className="help">
+          {/* <NavLink to="/ayuda" className="help">
             <HelpCircle size={18} /> Ayuda
-          </NavLink>
+          </NavLink> */}
         </div>
 
         <nav className="catbar">

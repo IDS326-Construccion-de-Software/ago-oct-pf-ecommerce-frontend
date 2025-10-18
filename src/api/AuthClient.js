@@ -72,6 +72,27 @@ class AuthenticationClient {
       };
     }
   }
+
+  /**
+   * Get profile by email (Id, Email)
+   * @param {string} email
+   */
+  async getProfileByEmail(email) {
+    try {
+      const { data } = await axios.get(`/users/by-email`, {
+        params: { email },
+      });
+      return { success: true, data };
+    } catch (error) {
+      if (error.response?.data) {
+        return { success: false, error: error.response.data };
+      }
+      return {
+        success: false,
+        error: { message: error.message || "Error al obtener perfil" },
+      };
+    }
+  }
 }
 
 export const authClient = new AuthenticationClient();

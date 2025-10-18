@@ -3,7 +3,8 @@ import axios from "./axiosConfig";
 class ProductImageClient {
   async getProductImages() {
     try {
-      const { data } = await axios.get("/productimage");
+      // Backend controller: ProductImagesController => route /api/ProductImages
+      const { data } = await axios.get("/ProductImages");
       return { success: true, data };
     } catch (error) {
       console.error("Error getting product images:", error);
@@ -19,7 +20,7 @@ class ProductImageClient {
 
   async getProductImageById(id) {
     try {
-      const { data } = await axios.get(`/productimage/${id}`);
+      const { data } = await axios.get(`/ProductImages/${id}`);
       return { success: true, data };
     } catch (error) {
       console.error(`Error getting product image ${id}:`, error);
@@ -35,7 +36,7 @@ class ProductImageClient {
 
   async getPrimaryImage(productId) {
     try {
-      const { data } = await axios.get(`/productimage/primary/${productId}`);
+      const { data } = await axios.get(`/ProductImages/primary/${productId}`);
       return { success: true, data };
     } catch (error) {
       console.error(
@@ -56,7 +57,7 @@ class ProductImageClient {
 
   async createProductImage(body) {
     try {
-      const { data } = await axios.post("/productimage", body);
+      const { data } = await axios.post("/ProductImages", body);
       return { success: true, data };
     } catch (error) {
       console.error("Error creating product image:", error);
@@ -72,7 +73,7 @@ class ProductImageClient {
 
   async deleteProductImage(id) {
     try {
-      await axios.delete(`/productimage/${id}`);
+      await axios.delete(`/ProductImages/${id}`);
       return { success: true };
     } catch (error) {
       console.error(`Error deleting product image ${id}:`, error);

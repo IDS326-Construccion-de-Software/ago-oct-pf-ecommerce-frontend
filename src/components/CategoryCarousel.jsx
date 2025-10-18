@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "../styles/CategoryCarousel.css";
 
@@ -51,8 +52,24 @@ export default function CategoryCarousel({ title = "Nuestras categorías", categ
         </button>
 
         <div className="cat-scroller" ref={scroller} role="list">
-          {categories.map((c) => (
-            <a key={c.id} href={c.href || "#"} className="cat-card" role="listitem">
+          {categories.map((c) => {
+            const computed = c.name
+              ? `/products/${c.name
+                  .toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+                  .replace(/\s+/g, "-")}`
+              : "/products";
+            const to = (c.href || (c.slug ? `/products/${c.slug}` : computed))
+              .replace(/^\/categorias?\//, "/products/")
+              .replace(/^\/categoria\//, "/products/");
+            return (
+            <Link
+              key={c.id || c.name}
+              to={to}
+              className="cat-card"
+              role="listitem"
+            >
               <div className="cat-media">
                 {c.image ? (
                   <img src={c.image} alt={c.name} loading="lazy" />
@@ -67,8 +84,8 @@ export default function CategoryCarousel({ title = "Nuestras categorías", categ
                 )}
               </div>
               <div className="cat-name">{c.name}</div>
-            </a>
-          ))}
+            </Link>
+          )})}
         </div>
 
         <button
