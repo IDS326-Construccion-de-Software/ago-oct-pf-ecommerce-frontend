@@ -1,3 +1,4 @@
+/* eslint react-refresh/only-export-components: 0 */
 import React, { createContext, useState, useContext } from 'react';
 
 // Crear el Context

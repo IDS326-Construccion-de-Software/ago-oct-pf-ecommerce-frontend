@@ -9,7 +9,7 @@ import unlockIcon from "../assets/Unlock.svg";
 
 export default function NewPassword() {
   const navigate = useNavigate();
-  const { isCodeVerified, resetRecovery } = useAuth();
+  const { isCodeVerified } = useAuth();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [msg, setMsg] = useState("");
@@ -19,7 +19,7 @@ export default function NewPassword() {
     if (!isCodeVerified) {
       navigate("/forgot-password");
     }
-  }, [isCodeVerified]);
+  }, [isCodeVerified, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

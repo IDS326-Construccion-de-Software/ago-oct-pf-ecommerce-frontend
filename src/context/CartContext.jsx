@@ -1,3 +1,4 @@
+  /* eslint react-refresh/only-export-components: 0 */
   import { createContext, useState, useContext } from "react";
 
   export const CartContext = createContext();

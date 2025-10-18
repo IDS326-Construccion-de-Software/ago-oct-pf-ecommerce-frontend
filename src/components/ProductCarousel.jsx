@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import PropTypes from "prop-types"
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react"

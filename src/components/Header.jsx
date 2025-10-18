@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/LogoTheRevenge.svg";
 import { User, ShoppingCart as CartIcon, HelpCircle, Search } from "lucide-react";

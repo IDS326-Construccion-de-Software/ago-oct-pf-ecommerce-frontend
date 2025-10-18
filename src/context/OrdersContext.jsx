@@ -1,3 +1,4 @@
+/* eslint react-refresh/only-export-components: 0 */
 // src/context/OrdersContext.jsx
 import { createContext, useState, useContext, useCallback, useRef, useMemo, useEffect } from "react";
 import { filterMyOrders as filterMyOrdersService, getOrderById as getOrderByIdService } from "../services/orderService";

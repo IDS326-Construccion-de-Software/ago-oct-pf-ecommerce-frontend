@@ -35,7 +35,7 @@ export default function CartDetail() {
         setLoadingProducts(true);
         const response = ProductClient.getAllProducts(1, 20);
         setProducts(response.data?.items || []);
-      } catch (err) {
+      } catch {
         setProducts([]);
       } finally {
         setLoadingProducts(false);
@@ -52,8 +52,8 @@ export default function CartDetail() {
   let taxes = subtotal * 0.18;
   let discountAmount = appliedCoupon ? appliedCoupon.discount * subtotal : 0;
 
-  // Si el cupón es ITVIS, quita el ITBIS
-  if (appliedCoupon && appliedCoupon.code === "ITVIS") {
+  // Si el cupón es ITEBI, quita el ITBIS
+  if (appliedCoupon && appliedCoupon.code === "ITEBI") {
     taxes = 0;
   }
 

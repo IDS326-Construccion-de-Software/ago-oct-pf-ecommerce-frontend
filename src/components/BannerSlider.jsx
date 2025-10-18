@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import "../styles/BannerSlider.css";
 
 // importacion de banners
@@ -31,20 +31,19 @@ export default function BannerSlider({
     SLIDES[0], 
   ];
 
+  const start = useCallback(() => {
+    stop();
+    timer.current = setTimeout(() => {
+      next();
+    }, delay);
+  }, [delay]);
+  const stop = () => timer.current && clearTimeout(timer.current);
   // autoplay
   useEffect(() => {
     if (!autoPlay) return;
     start();
     return stop;
-  }, [index, autoPlay]);
-
-  const start = () => {
-    stop();
-    timer.current = setTimeout(() => {
-      next();
-    }, delay);
-  };
-  const stop = () => timer.current && clearTimeout(timer.current);
+  }, [index, autoPlay, start]);
 
   const next = () => setIndex((i) => i + 1);
   const prev = () => setIndex((i) => i - 1);

@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import '../styles/auth.css'
 import logoUrl from '../assets/LogoTheRevenge.svg'
 import isEmail from 'validator/lib/isEmail'
 import { Mail, Lock, Eye } from 'lucide-react'
+import { authClient } from '../api/AuthClient'
 
 export default function Login(){
   const [email,setEmail] = useState('')
@@ -20,15 +21,53 @@ export default function Login(){
     e.preventDefault()
     setError('')
     const emailToCheck = email.trim()
-    if (!isEmail(emailToCheck)) return setError('Correo inválido.')
-    if(!pwd) return setError('Ingrese su contraseña.')
-    const fakeUser = { id: 1, email, name: 'User', token: 'demo' }
-    login(fakeUser)
+  if (!isEmail(emailToCheck)) return setError('Correo inválido')
+  if(!pwd) return setError('Ingrese su contraseña')
+  if(pwd.length < 8) return setError('La contraseña debe tener al menos 8 caracteres')
+    
     setLoading(true)
-    setTimeout(()=>{
+    
+    try {
+      const loginData = {
+        email: emailToCheck,
+        password: pwd
+      }
+      
+      console.log('Intentando iniciar sesión...')
+      
+      const result = await authClient.login(loginData)
+      
+      if (result.success) {
+        console.log('Login exitoso:', result.data)
+        
+        // Guardar tokens y datos del usuario
+        const tokens = result.data.tokens
+        if (tokens?.access_token) {
+          localStorage.setItem('access_token', tokens.access_token)
+        }
+        if (tokens?.id_token) {
+          localStorage.setItem('id_token', tokens.id_token)
+        }
+        
+        // Crear objeto de usuario para el contexto
+        const userData = {
+          email: emailToCheck,
+          name: emailToCheck.split('@')[0], // Usamos la parte del email como nombre temporal
+          token: tokens.access_token
+        }
+        
+        login(userData)
+        navigate('/')
+      } else {
+        console.error('Error en login:', result.error)
+        setError(result.error.message || 'Credenciales inválidas o usuario no verificado.')
+      }
+    } catch (err) {
+      console.error('Error inesperado:', err)
+      setError('Error inesperado. Por favor, intenta nuevamente.')
+    } finally {
       setLoading(false)
-      navigate('/')
-    }, 500)
+    }
   }
 
   return (
@@ -38,23 +77,24 @@ export default function Login(){
           <img src={logoUrl} alt="Logo The Revenge" />
         </div>
 
-        <h2 className="auth-title">Inicia sesión en tu cuenta</h2>
+  <h2 className="auth-title">Inicia sesión</h2>
 
         <form onSubmit={onSubmit}>
-          <label className="auth-label">Correo electrónico</label>
+          <label className="auth-label" htmlFor="login-email">Correo electrónico</label>
           <div className="input-wrap" style={{ marginBottom: 18 }}>
             <span className="input-left"><Mail size={18}/></span>
             <input
               className="input-base input-with-icons"
               type="email"
-              placeholder="Ingrese su correo electrónico"
+              placeholder="Ingrese su correo"
               value={email}
               onChange={e=>setEmail(e.target.value)}
               autoComplete="email"
+              id="login-email"
             />
           </div>
 
-          <label className="auth-label">Contraseña</label>
+          <label className="auth-label" htmlFor="login-password">Contraseña</label>
           <div className="input-wrap" style={{ marginBottom: 18 }}>
             <span className="input-left"><Lock size={18}/></span>
             <input
@@ -64,11 +104,14 @@ export default function Login(){
               value={pwd}
               onChange={e=>setPwd(e.target.value)}
               autoComplete="current-password"
+              id="login-password"
             />
             <button
               type="button"
               className="eye-btn input-right"
               onClick={()=>setShowPwd(s=>!s)}
+              aria-label={showPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              aria-pressed={showPwd}
             >
               <Eye size={20}/>
             </button>
@@ -90,7 +133,7 @@ export default function Login(){
 
           {error && <div className="auth-error">{error}</div>}
 
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button type="submit" className="btn-primary" disabled={loading} aria-label="Iniciar sesión">
             {loading ? 'Ingresando…' : 'Iniciar sesión'}
           </button>
 
@@ -103,13 +146,13 @@ export default function Login(){
 
           <div className="auth-bottom">
             <span className="ask">¿No tienes una cuenta? </span>
-            <span
+            <Link
+              to="/register"
               className="cta"
-              style={{ cursor: "pointer", color: "#EC6426", textDecoration: "underline" }}
-              onClick={() => navigate('/register')}
+              style={{ color: "#EC6426", textDecoration: "underline" }}
             >
               Regístrate aquí
-            </span>
+            </Link>
           </div>
         </form>
       </div>

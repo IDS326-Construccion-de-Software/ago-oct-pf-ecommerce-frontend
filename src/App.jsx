@@ -1,5 +1,5 @@
-import { Routes, Route, useParams } from 'react-router-dom';
-import { CartProvider, CartContext } from "./context/CartContext";
+import { Routes, Route } from 'react-router-dom';
+import { CartProvider } from "./context/CartContext";
 import { OrdersProvider } from "./context/OrdersContext";
 import { SettingsProvider } from './context/SettingsContext';
 import { AuthProvider } from './context/AuthContext';

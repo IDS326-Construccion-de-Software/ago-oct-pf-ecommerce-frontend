@@ -14,7 +14,6 @@ export default function OrdersManager() {
     orders,
     currentPage,
     totalPages,
-    totalCount,
     loading,
     filters,
     
