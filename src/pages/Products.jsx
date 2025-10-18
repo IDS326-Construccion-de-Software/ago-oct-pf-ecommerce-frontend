@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ProductClient } from "../api/ProductClient";
+import { productClient } from "../api/ProductClient";
+import { categoryClient } from "../api/categoryClient";
 import ProductCard from '../components/ProductCard';
 import Header from '../components/Header'; 
 import '../styles/ProductsPage.css';
@@ -26,12 +27,18 @@ const Products = () => {
   ];
 
   useEffect(() => {
-    const fetchProducts =  () => {
+    const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response =  ProductClient.getAllProducts(1, 20);
-        setProducts(response.data.items);
-        setFilteredProducts(response.data.items);
+        const response = await productClient.getAllProducts();
+        if (response.success && Array.isArray(response.data)) {
+          setProducts(response.data);
+          setFilteredProducts(response.data);
+        } else {
+          console.error('Invalid response format:', response);
+          setProducts([]);
+          setFilteredProducts([]);
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
         setProducts([]);
@@ -44,10 +51,15 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCategories =  () => {
+    const fetchCategories = async () => {
       try {
-        const response =  ProductClient.getAllCategories(); // Endpoint de categorías
-        setCategories(['all', ...response.data]);
+        const response = await categoryClient.getCategories();
+        if (response.success && Array.isArray(response.data)) {
+          const categoryNames = response.data.map(cat => cat.name || cat.Name);
+          setCategories(['all', ...categoryNames]);
+        } else {
+          setCategories(['all']);
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
         setCategories(['all']);
@@ -57,32 +69,34 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
-    const fetchBrands =  () => {
+    const fetchBrands = async () => {
       try {
-        const response =  ProductClient.getAllBrands(); 
-        setBrands(['all', ...response.data]);
+        const uniqueBrands = [...new Set(products.map(p => p.brand || p.Brand).filter(Boolean))];
+        setBrands(['all', ...uniqueBrands]);
       } catch (error) {
         console.error('Error fetching brands:', error);
         setBrands(['all']);
       }
     };
-    fetchBrands();
-  }, []);
+    if (products.length > 0) {
+      fetchBrands();
+    }
+  }, [products]);
 
   useEffect(() => {
     let result = [...products];
 
     if (selectedCategory !== 'all') {
-      result = result.filter(p => p.category === selectedCategory);
+      result = result.filter(p => (p.category || p.Category) === selectedCategory);
     }
 
     if (selectedBrand !== 'all') {
-      result = result.filter(p => p.brand === selectedBrand);
+      result = result.filter(p => (p.brand || p.Brand) === selectedBrand);
     }
 
     if (selectedPrice !== 'all') {
       result = result.filter(p => {
-        const price = p.price;
+        const price = p.price || p.Price;
         const [min, max] = selectedPrice.split('-');
         if (max === '') return price >= parseFloat(min);
         return price >= parseFloat(min) && price <= parseFloat(max);

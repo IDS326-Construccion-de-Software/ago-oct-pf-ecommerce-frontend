@@ -5,6 +5,7 @@ import '../styles/auth.css'
 import logoUrl from '../assets/LogoTheRevenge.svg'
 import isEmail from 'validator/lib/isEmail'
 import { Mail, Lock, Eye } from 'lucide-react'
+import { authClient } from '../api/AuthClient'
 
 export default function Login(){
   const [email,setEmail] = useState('')
@@ -22,13 +23,51 @@ export default function Login(){
     const emailToCheck = email.trim()
     if (!isEmail(emailToCheck)) return setError('Correo inválido.')
     if(!pwd) return setError('Ingrese su contraseña.')
-    const fakeUser = { id: 1, email, name: 'User', token: 'demo' }
-    login(fakeUser)
+    if(pwd.length < 8) return setError('La contraseña debe tener al menos 8 caracteres.')
+    
     setLoading(true)
-    setTimeout(()=>{
+    
+    try {
+      const loginData = {
+        email: emailToCheck,
+        password: pwd
+      }
+      
+      console.log('Intentando iniciar sesión...')
+      
+      const result = await authClient.login(loginData)
+      
+      if (result.success) {
+        console.log('Login exitoso:', result.data)
+        
+        // Guardar tokens y datos del usuario
+        const tokens = result.data.tokens
+        if (tokens?.access_token) {
+          localStorage.setItem('access_token', tokens.access_token)
+        }
+        if (tokens?.id_token) {
+          localStorage.setItem('id_token', tokens.id_token)
+        }
+        
+        // Crear objeto de usuario para el contexto
+        const userData = {
+          email: emailToCheck,
+          name: emailToCheck.split('@')[0], // Usamos la parte del email como nombre temporal
+          token: tokens.access_token
+        }
+        
+        login(userData)
+        navigate('/')
+      } else {
+        console.error('Error en login:', result.error)
+        setError(result.error.message || 'Credenciales inválidas o usuario no verificado.')
+      }
+    } catch (err) {
+      console.error('Error inesperado:', err)
+      setError('Error inesperado. Por favor, intenta nuevamente.')
+    } finally {
       setLoading(false)
-      navigate('/')
-    }, 500)
+    }
   }
 
   return (

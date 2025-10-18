@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import '../styles/auth.css'
 import logoUrl from '../assets/LogoTheRevenge.svg'
 import isEmail from 'validator/lib/isEmail'
-import { User, Mail, Lock, Phone, MapPin, Eye } from 'lucide-react'
+import { User, Mail, Lock, Phone, Eye, Calendar, CreditCard } from 'lucide-react'
+import { authClient } from '../api/AuthClient'
 
 export default function Register() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -13,7 +14,8 @@ export default function Register() {
   const [pwd, setPwd] = useState('')
   const [confirmPwd, setConfirmPwd] = useState('')
   const [phone, setPhone] = useState('')
-  const [address, setAddress] = useState('')
+  const [birthdate, setBirthdate] = useState('')
+  const [numIdentification, setNumIdentification] = useState('')
   const [showPwd, setShowPwd] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -33,20 +35,56 @@ export default function Register() {
     setCurrentStep(2)
   }
 
-  // Paso 2: teléfono, dirección
+  // Paso 2: teléfono, fecha de nacimiento, número de identificación
   async function handleStep2Submit(e) {
     e.preventDefault()
     setError('')
-    if (!phone.trim()) return setError('Ingrese su número de teléfono.')
-    if (!address.trim()) return setError('Ingrese su dirección.')
+    
+    // Validaciones opcionales
+    if (phone && phone.length < 8) {
+      return setError('El número de teléfono debe tener al menos 8 dígitos.')
+    }
+    
+    if (numIdentification && numIdentification.length < 5) {
+      return setError('El número de identificación debe tener al menos 5 dígitos.')
+    }
+    
     setLoading(true)
-    const fakeUser = { id: Date.now(), name, email, phone, address, token: 'demo' }
-    login(fakeUser)
-    setTimeout(() => {
+    
+    try {
+      // Preparar datos para el registro
+      const registerData = {
+        name,
+        email,
+        password: pwd,
+        cellphone: phone || null,
+        birthdate: birthdate || null,
+        numIdentification: numIdentification ? parseInt(numIdentification) : null
+      }
+      
+      console.log('Registrando usuario:', registerData)
+      
+      const result = await authClient.register(registerData)
+      
+      if (result.success) {
+        console.log('Registro exitoso:', result.data)
+        navigate('/', { 
+          state: { 
+            showSuccessModal: true, 
+            successTitle: "¡Registro exitoso!", 
+            successMessage: result.data.message || "Tu cuenta ha sido creada. Por favor, verifica tu email." 
+          } 
+        })
+      } else {
+        console.error('Error en registro:', result.error)
+        setError(result.error.message || 'Error al registrar usuario.')
+      }
+    } catch (err) {
+      console.error('Error inesperado:', err)
+      setError('Error inesperado. Por favor, intenta nuevamente.')
+    } finally {
       setLoading(false)
-      // Activa el modal como en SettingPage: navega y muestra modal tras registro exitoso
-      navigate('/', { state: { showSuccessModal: true, successTitle: "¡Registro exitoso!", successMessage: "Tu cuenta ha sido creada correctamente." } });
-    }, 800)
+    }
   }
 
   const goBackToStep1 = () => {
@@ -130,29 +168,42 @@ export default function Register() {
 
   const renderStep2 = () => (
     <form onSubmit={handleStep2Submit}>
-      <label className="auth-label">Número de teléfono</label>
+      <label className="auth-label">Número de teléfono (opcional)</label>
       <div className="input-wrap" style={{ marginBottom: 18 }}>
         <span className="input-left"><Phone size={18} /></span>
         <input
           className="input-base input-with-icons"
           type="tel"
-          placeholder="Ingrese su número de teléfono"
+          placeholder="Ej: +503 1234-5678"
           value={phone}
           onChange={e => setPhone(e.target.value)}
           autoComplete="tel"
         />
       </div>
 
-      <label className="auth-label">Dirección</label>
+      <label className="auth-label">Fecha de nacimiento (opcional)</label>
+      <div className="input-wrap" style={{ marginBottom: 18 }}>
+        <span className="input-left"><Calendar size={18} /></span>
+        <input
+          className="input-base input-with-icons"
+          type="date"
+          placeholder="YYYY-MM-DD"
+          value={birthdate}
+          onChange={e => setBirthdate(e.target.value)}
+          autoComplete="bday"
+        />
+      </div>
+
+      <label className="auth-label">Número de identificación (opcional)</label>
       <div className="input-wrap" style={{ marginBottom: 32 }}>
-        <span className="input-left"><MapPin size={18} /></span>
+        <span className="input-left"><CreditCard size={18} /></span>
         <input
           className="input-base input-with-icons"
           type="text"
-          placeholder="Ingrese su dirección"
-          value={address}
-          onChange={e => setAddress(e.target.value)}
-          autoComplete="street-address"
+          placeholder="Ej: 01234567-8"
+          value={numIdentification}
+          onChange={e => setNumIdentification(e.target.value)}
+          autoComplete="off"
         />
       </div>
 
