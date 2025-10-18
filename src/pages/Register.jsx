@@ -26,11 +26,11 @@ export default function Register() {
   function handleStep1Submit(e) {
     e.preventDefault()
     setError('')
-    if (!name.trim()) return setError('Ingrese su nombre.')
-    if (!isEmail(email.trim())) return setError('Correo electrónico inválido.')
-    if (!pwd) return setError('Ingrese una contraseña.')
-    if (pwd.length < 6) return setError('La contraseña debe tener al menos 6 caracteres.')
-    if (pwd !== confirmPwd) return setError('Las contraseñas no coinciden.')
+  if (!name.trim()) return setError('Ingrese su nombre')
+  if (!isEmail(email.trim())) return setError('Correo electrónico inválido')
+  if (!pwd) return setError('Ingrese una contraseña')
+  if (pwd.length < 6) return setError('La contraseña debe tener al menos 6 caracteres')
+  if (pwd !== confirmPwd) return setError('Las contraseñas no coinciden')
     setError('')
     setCurrentStep(2)
   }

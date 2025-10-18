@@ -21,9 +21,9 @@ export default function Login(){
     e.preventDefault()
     setError('')
     const emailToCheck = email.trim()
-    if (!isEmail(emailToCheck)) return setError('Correo inválido.')
-    if(!pwd) return setError('Ingrese su contraseña.')
-    if(pwd.length < 8) return setError('La contraseña debe tener al menos 8 caracteres.')
+  if (!isEmail(emailToCheck)) return setError('Correo inválido')
+  if(!pwd) return setError('Ingrese su contraseña')
+  if(pwd.length < 8) return setError('La contraseña debe tener al menos 8 caracteres')
     
     setLoading(true)
     
