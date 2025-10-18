@@ -35,11 +35,11 @@ const PaymentForm = ({ onPaymentSuccess }) => {
       // Simular llamada a API de pago
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      let paymentData = {};
+      // build payload on demand if needed
       if (paymentMethod === 'card') {
-        paymentData = { method: 'Tarjeta', cardNumber, cardName, expiry: `${expiryMonth}/${expiryYear}` };
+        // example: const payload = { method: 'Tarjeta', cardNumber, cardName, expiry: `${expiryMonth}/${expiryYear}` }
       } else if (paymentMethod === 'wallet') {
-        paymentData = { method: selectedWallet, cardName: 'N/A', cardNumber: '****' };
+        // example: const payload = { method: selectedWallet }
       }
 
       onPaymentSuccess({ cardNumber, cardName, expiry: `${expiryMonth}/${expiryYear}`, cvv });

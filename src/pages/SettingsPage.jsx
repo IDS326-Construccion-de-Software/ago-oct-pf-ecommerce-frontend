@@ -3,10 +3,12 @@ import { Save } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import '../styles/SettingsPage.css'; 
 import Header from "../components/Header";
+import { useAuth } from "../context/AuthContext";
 import SuccessModal from "../components/SuccessModal";
 
 const SettingsPage = () => {
   const { settings, handleToggle, handleSelectChange, handleSaveChanges, resetSettings } = useSettings();
+  useAuth();
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
@@ -24,27 +26,7 @@ const SettingsPage = () => {
 
   return (
     <div className="settings-page">
-      <header className="profile-header">
-        <h1 className="header-logo">
-          <a href="/">
-            <img src="/Icono-the-Revenge-V2.ico" alt="logo" className="logo-img" />
-            THE REVENGE
-          </a>
-        </h1>
-        <div className="header-icons">
-          <span className="header-icon">🔔</span>
-          <span
-            className="header-icon"
-            title="Cerrar sesión"
-            onClick={() => {
-              logout();
-              navigate("/login");
-            }}
-          >
-            🚪
-          </span>
-        </div>
-      </header>
+      <Header />
 
       <br /><br />
 

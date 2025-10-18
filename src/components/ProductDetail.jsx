@@ -43,8 +43,8 @@ export function ProductDetail({ productId, onAddToCart }) {
         // Reiniciar estado para el nuevo producto
         setQuantity(1)
         setSelectedImage(0)
-      } catch (err) {
-        console.error("Error cargando el producto:", err)
+      } catch {
+        console.error("Error cargando el producto")
         setError("No pudimos encontrar el producto que buscas.")
       } finally {
         setLoading(false)

@@ -19,7 +19,7 @@ export default function Register() {
   const [showPwd, setShowPwd] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
+  useAuth()
   const navigate = useNavigate()
 
   // Paso 1: nombre, email, contraseña

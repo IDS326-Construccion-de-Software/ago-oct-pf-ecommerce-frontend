@@ -7,7 +7,7 @@ import HeaderSimple from "../components/HeaderSimple";
 
 const UserProfile = () => {
   const navigate = useNavigate();
-  const { user, loading, error, logout } = useAuth();
+  const { user, loading, error } = useAuth();
 
   // 🔹 Estados locales para manejar tabs y edición
   const [activeTab, setActiveTab] = useState("profile");
@@ -40,35 +40,7 @@ const UserProfile = () => {
     usedDiscounts: 3,
   };
 
-  const orders = [
-    {
-      id: "#A12452",
-      name: "Camiseta exclusiva",
-      price: 2990,
-      date: "02/09/2025",
-      status: "Completado",
-    },
-    {
-      id: "#B99876",
-      name: "Zapatillas Revenge",
-      price: 6850,
-      date: "10/09/2025",
-      status: "Entregado",
-    },
-  ];
-
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "Completado":
-        return "status-completed";
-      case "Entregado":
-        return "status-delivered";
-      case "Pendiente":
-        return "status-pending";
-      default:
-        return "";
-    }
-  };
+  // (orders and getStatusClass removed as unused for now)
 
 
   if (loading) return <p className="loading">Cargando perfil...</p>;

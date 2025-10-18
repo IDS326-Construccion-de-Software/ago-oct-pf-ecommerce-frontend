@@ -4,11 +4,6 @@ import { Search, X, Calendar } from "lucide-react";
 import "../styles/OrderFilters.css"; // Asegúrate de que la ruta sea correcta
 
 export default function OrderFilters({ filters, setFilters }) {
-  // Salvaguarda: si las props esenciales no llegan, no renderiza nada para evitar errores.
-  if (!filters || !setFilters) {
-    return null;
-  }
-  
   const updateFilter = useCallback((key, value) => {
     setFilters(prevFilters => ({ ...prevFilters, [key]: value }));
   }, [setFilters]);
@@ -44,6 +39,11 @@ export default function OrderFilters({ filters, setFilters }) {
     return active;
   };
   // --- FIN DE LA CORRECCIÓN ---
+
+  // Salvaguarda: si las props esenciales no llegan, no renderiza nada para evitar errores.
+  if (!filters || !setFilters) {
+    return null;
+  }
 
   const activeFilters = getActiveFilters();
 

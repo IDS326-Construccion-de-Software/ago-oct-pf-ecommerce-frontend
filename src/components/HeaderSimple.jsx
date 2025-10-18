@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import Logo from "../assets/LogoTheRevenge.svg";
 import { User, ShoppingCart as CartIcon, HelpCircle, Search } from "lucide-react";
 import "../styles/Header.css";
@@ -7,26 +7,14 @@ import { useCart } from "../context/CartContext";
 
 export default function HeaderSimple() {
   const { cartItems, setIsCartOpen } = useCart(); 
-  const [search, setSearch] = useState("");
-  const navigate = useNavigate();
+  const [/* search */, /* setSearch */] = useState("");
 
   const toggleCart = () => {
     setIsCartOpen(true);
   };
 
 
-  const slug = (s) =>
-    s.toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, "-");
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(`/products?search=${encodeURIComponent(search.trim())}`);
-    }
-  };
+  // simplified header - no search form here to keep minimal
 
   return (
     <>
