@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../assets/LogoTheRevenge.svg";
-import { User, ShoppingCart as CartIcon, HelpCircle, Search } from "lucide-react";
+import { User, ShoppingCart as CartIcon, HelpCircle, Search, Truck, ShieldCheck, Phone } from "lucide-react";
 import "../styles/Header.css";
 import { useCart } from "../context/CartContext";
 
@@ -37,7 +37,13 @@ export default function Header() {
       <header className="rev-header">
         <div className="topbar">
           <div className="container topbar-inner">
-            <div />
+            <div className="top-info">
+              <span className="info-item"><Truck size={14} /> Envíos 24-48h</span>
+              <span className="info-sep" aria-hidden>|</span>
+              <span className="info-item"><ShieldCheck size={14} /> Pagos seguros</span>
+              <span className="info-sep" aria-hidden>|</span>
+              <a className="info-item" href="tel:+18095551234"><Phone size={14} /> Soporte</a>
+            </div>
             <div className="top-links">
               <NavLink to="/login" className="link">
                 <User size={16} /> Iniciar sesión
@@ -70,9 +76,9 @@ export default function Header() {
               <Search className="search-icon" />
             </button>
           </form>
-          {/* <NavLink to="/ayuda" className="help">
+          <NavLink to="/ayuda" className="help">
             <HelpCircle size={18} /> Ayuda
-          </NavLink> */}
+          </NavLink>
         </div>
 
         <nav className="catbar">

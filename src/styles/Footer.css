@@ -22,6 +22,22 @@
   height: 64px;
   width: auto;
 }
+.contact-list{
+  list-style: none;
+  margin: 8px 0 0 0;
+  padding: 0 0 0 8px;
+  display: grid;
+  gap: 6px;
+  color: #444;
+}
+.contact-list li{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .95rem;
+}
+.contact-list a{ color: #333; text-decoration: none; }
+.contact-list a:hover{ text-decoration: underline; }
 
 .footer-col h4{
   margin: 0 0 10px;
@@ -45,6 +61,19 @@
   text-decoration: none;
 }
 .footer-col li a:hover{ color: var(--color-primary); }
+.social-links{
+  margin-top: 12px;
+  display: inline-flex;
+  gap: 10px;
+}
+.social-links a{
+  color: var(--color-accent);
+  display: inline-flex;
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(0,0,0,.04);
+}
+.social-links a:hover{ background: rgba(0,0,0,.07); color: var(--color-primary); }
 
 /* Newsletter */
 .footer-newsletter .nl-title{

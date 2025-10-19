@@ -1,3 +1,18 @@
+## Stripe (solo FE con redirección)
+
+Para un flujo simple sin integrar SDKs complejos, puedes configurar un Payment Link de Stripe y redirigir al usuario desde el botón "Proceder al pago" en el carrito.
+
+1. Crea un Payment Link en tu dashboard de Stripe.
+2. En `FE/.env` agrega:
+
+```
+VITE_STRIPE_PAYMENT_LINK_URL=https://buy.stripe.com/test_XXXXXXXX
+```
+
+3. El carrito (`pages/CartDetail.jsx`) intentará redirigir a ese URL. Si no está definido, cae al modal de pago interno.
+
+Nota: Para una integración más avanzada (Payment Element/PaymentIntents), se requiere usar Stripe.js y/o un backend. Este repo ya incluye una base de backend para PaymentIntents, pero aquí se mantiene FE-only según la solicitud.
+
 # The Revenge - E-Commerce Frontend
 
 ## 📋 Descripción

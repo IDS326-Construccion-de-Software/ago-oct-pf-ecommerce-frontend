@@ -9,9 +9,12 @@ import Modal from "../components/Modal";
 import ProductCarousel from "../components/ProductCarousel";
 import { ProductClient } from "../api/ProductClient";
 import PaymentModal from "../components/PaymentModal";
+import { redirectToStripePaymentLink } from "../services/stripeRedirect";
+import { useAuth } from "../context/AuthContext";
 
 export default function CartDetail() {
   const { cartItems, clearCart, addToCart } = useCart();
+  const { user } = useAuth();
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
@@ -77,7 +80,11 @@ export default function CartDetail() {
 
   const total = subtotal + taxes - discountAmount;
 
-  const handleProceedToPayment = () => setIsPaymentModalOpen(true);
+  const handleProceedToPayment = () => {
+    // Redireccionar a Stripe Payment Link si está configurado; fallback al modal interno
+    const ok = redirectToStripePaymentLink({ email: user?.email });
+    if (!ok) setIsPaymentModalOpen(true);
+  };
 
   const handleClearCart = () => {
     clearCart();

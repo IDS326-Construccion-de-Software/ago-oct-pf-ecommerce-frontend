@@ -17,6 +17,14 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import OrdersPage from './pages/OrdersPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import Register from './pages/Register';
+import Checkout from './pages/Checkout';
+import StripeProvider from './components/StripeProvider';
+import Terminos from './pages/Terminos';
+import Privacidad from './pages/Privacidad';
+import Cookies from './pages/Cookies';
+import SobreNosotros from './pages/SobreNosotros';
+import Mision from './pages/Mision';
+import TrabajaConNosotros from './pages/TrabajaConNosotros';
 import Help from './pages/Help';
 import NotFound from './pages/NotFound';
 
@@ -27,7 +35,8 @@ export default function App() {
       <SettingsProvider>
         <CartProvider>
           <OrdersProvider>
-            <GlobalCartWrapper>
+            <StripeProvider>
+              <GlobalCartWrapper>
               <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/orders" element={<OrdersPage />} />
@@ -46,11 +55,19 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="/ayuda" element={<Help />} />
+                <Route path="/terminos" element={<Terminos />} />
+                <Route path="/privacidad" element={<Privacidad />} />
+                <Route path="/cookies" element={<Cookies />} />
+                <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+                <Route path="/mision" element={<Mision />} />
+                <Route path="/trabaja-con-nosotros" element={<TrabajaConNosotros />} />
                 <Route path="*" element={<NotFound />} />
 
               </Routes>
-            </GlobalCartWrapper>
+              </GlobalCartWrapper>
+            </StripeProvider>
           </OrdersProvider>
         </CartProvider>
       </SettingsProvider>

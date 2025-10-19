@@ -10,6 +10,7 @@ import { getAllProducts } from "../services/productService";
 import { categoriesMock } from "../mocks/categories";
 import FootChocolateBanner from "../assets/Bannerfootchocolate-01.svg";
 import FrizaoFridayBanner from "../assets/Bannerfootfrizaofriday.svg";
+import { NavLink } from "react-router-dom";
 
 
 const Landing = () => {
@@ -111,6 +112,29 @@ const Landing = () => {
             alt="Banner foot chocolate"
             style={{ width: "100%", margin: "24px 0" }}
         />
+        </div>
+
+        <div className="container" style={{ padding: "16px 0 32px" }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '16px',
+            background: 'rgba(253, 227, 207, 0.25)',
+            border: '1px solid rgba(0,0,0,.06)',
+            borderRadius: 12,
+            padding: 16
+          }}>
+            <div>
+              <h3>¿Necesitas ayuda?</h3>
+              <p>Visita nuestro centro de ayuda o contáctanos.</p>
+              <NavLink to="/ayuda" className="nl-btn">Ir a Ayuda</NavLink>
+            </div>
+            <div>
+              <h3>Conoce The Revenge</h3>
+              <p>Nuestra historia, misión y valores.</p>
+              <NavLink to="/sobre-nosotros" className="nl-btn">Sobre nosotros</NavLink>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />

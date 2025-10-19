@@ -4,6 +4,7 @@ import { CartContext } from '../context/CartContext';
 import logo from '../assets/LogoTheRevenge.svg';
 import PaymentForm from './PaymentForm';
 import '../styles/PaymentModal.css';
+import { redirectToStripePaymentLink } from "../services/stripeRedirect";
 
 const PaymentModal = ({ isOpen, onClose, total, cartItems }) => {
   const {
@@ -56,6 +57,9 @@ const PaymentModal = ({ isOpen, onClose, total, cartItems }) => {
 
           <div className="payment-modal-right">
             <div className="payment-card">
+                <button className="nl-btn" style={{ width: '100%', marginBottom: 12 }} onClick={() => redirectToStripePaymentLink()}>
+                  Pagar con Stripe (Redirección)
+                </button>
               <h3><Tag size={20} /> Código de Descuento</h3>
               <div className="discount-input-wrapper">
                 <input type="text" placeholder="Ingresa tu código" />
