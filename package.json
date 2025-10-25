@@ -28,7 +28,7 @@
     "lucide-react": "^0.544.0",
     "prop-types": "^15.8.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react-dom": "^19.2.0",
     "react-number-format": "^5.4.4",
     "react-router-dom": "^7.9.1",
     "sweetalert2": "^11.24.1",
